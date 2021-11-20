@@ -1,7 +1,9 @@
 <template>
   <div class="planet">
     <div class="planet-container">
-      <div class="planet-horizon"></div>
+      <div class="planet-horizon">
+        <img src="../assets/prince.png" alt="">
+      </div>
       <continent
           :continent="continent"
           @landing="landedCon"
@@ -29,7 +31,8 @@ export default {
 
 <style lang="scss">
 .planet {
-    width: 100%;
+    width: 100vw;
+    height: 100vh;
 }
 .planet-container {
     position: absolute;
@@ -40,9 +43,15 @@ export default {
 .planet-horizon {
     height: 35px;
     width: 100%;
-    background-color: rgba(255, 255, 255, 1);
+    background-color: rgba(255, 248, 231, 1);
     border-radius: 50% 50% 0 0 / 50% 50% 0 0;
     border: 0;
-    margin-bottom: -1px;
+    margin-bottom: -6px;
+}
+.planet-horizon img {
+  width: 35%;
+  position: absolute;
+  left: 60%;
+  transform: translateY(-65%)
 }
 </style>

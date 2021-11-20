@@ -1,10 +1,10 @@
 <template>
   <div class="continent">
-    <div class="continent_head">
+    <!-- <div class="continent_head">
       <div class="continent_icon">
         <i :class="['fa', `fa-${continent.icon}`]"></i>
       </div>
-    </div>
+    </div> -->
     <div class="continent_body">
       <h3 class="continent_title">{{ continent.name }}</h3>
     </div>
@@ -72,7 +72,7 @@ export default {
 
 <style lang="scss">
 .continent {
-    background-color: rgba(255, 255, 255, 1);
+    background-color: rgba(255, 248, 231, 1);
     height: 100%;
     width: 100%;
     border: 0;
@@ -87,7 +87,7 @@ export default {
   will-change: transform;
 }
 .continent_body {
-  padding: 0 20px;
+  padding: 0 15px;
   transform: translate3d(0, 189px, 0);
   will-change: transform;
 }
@@ -102,7 +102,6 @@ export default {
   font-size: 18px;
 }
 .continent_title {
-  margin-top: 6px;
   font-size: 32px;
 }
 </style>

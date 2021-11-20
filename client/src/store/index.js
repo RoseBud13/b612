@@ -4,8 +4,7 @@ export default createStore({
     state: {
         continent:
         {
-            icon: 'user',
-            name: 'B612',
+            name: '欢迎来到我的B612星球',
             spots: [
             {
                 id: 1,
