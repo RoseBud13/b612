@@ -8,10 +8,26 @@ export default createStore({
             spots: [
             {
                 id: 1,
-                title: 'Turntabel',
+                title: '小王子的唱片机',
+                icon: 'record-vinyl',
+                color: 'pink',
+                linkTo: 'http://www.b612.one/bubble-turntable'
+            },
+            {
+                id: 2,
+                title: '小王子的故事书',
+                icon: 'book',
+                color: 'pink',
+                linkTo: 'http://www.b612.one/lp/index.pdf'
+            },
+            {
+                id: 3,
+                title: '旧版主页',
+                icon: 'archive',
+                color: 'pink',
+                linkTo: 'http://www.b612.one/old'
             }
             ],
-            colors: ['#ff6262', '#ffa947']
         },
         landed: null,
         departured: null,

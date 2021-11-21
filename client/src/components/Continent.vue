@@ -7,6 +7,20 @@
     </div> -->
     <div class="continent_body">
       <h3 class="continent_title">{{ continent.name }}</h3>
+      <ul 
+        v-for="spot in continent.spots"
+        :key="spot.id"
+        class="spots-dashboard"
+      >
+        <div class="spots-item">
+          <div class="continent_icon" :style="{color: spot.color}">
+            <i :class="['fas', `fa-${spot.icon}`]"></i>
+          </div>
+          <a :href="spot.linkTo">
+            <p>{{ spot.title }}</p>
+          </a>
+        </div>
+      </ul>
     </div>
   </div>
 </template>
@@ -95,13 +109,28 @@ export default {
   display: flex;
   width: 44px;
   height: 44px;
-  border: 1px solid #eee;
+  border: 0;
   border-radius: 100%;
   justify-content: center;
   align-items: center;
-  font-size: 18px;
+  font-size: 35px;
 }
 .continent_title {
   font-size: 32px;
+}
+.spots-dashboard {
+  margin: 50px 0;
+}
+.spots-item {
+  display: flex;
+}
+.spots-item p {
+  font-size: 21px;
+  padding: 10px;
+}
+.spots-item
+a:hover, a:visited, a:link, a:active {
+    text-decoration: none;
+    color: inherit;
 }
 </style>
