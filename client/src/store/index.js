@@ -4,7 +4,7 @@ export default createStore({
     state: {
         continent:
         {
-            name: '欢迎来到我的B612星球',
+            name: '欢迎来到B612星球',
             spots: [
             {
                 id: 1,

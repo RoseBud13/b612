@@ -8,7 +8,6 @@
 
 <script>
 import Space from '../components/Space.vue'
-// import Planet from '../components/xPlanet.vue'
 import Planet from '../components/Planet.vue'
 import ContinentDetail from '../components/ContinentDetail.vue'
 
