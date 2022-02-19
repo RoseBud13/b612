@@ -6,7 +6,7 @@ Copyright © 2021 Xiong, Kaijie. All rights reserved.
 """
 
 import random, string
-from .models import db, Musubi, MusubiAlpha, MusubiBeta
+from .models import db, Musubi, Reiteki
 
 
 class Tools():
@@ -23,25 +23,22 @@ class Tools():
 
 
 class DataHandler():
-    def get_ab_data(alpha_code):
-        print(alpha_code)
-        data_alpha = MusubiAlpha.query.filter_by(musubi_code=alpha_code).first()
-        data_beta = MusubiBeta.query.filter_by(musubi_code=alpha_code).first()
+    def get_paired_reiteki(code):
+        reiteki_list = Reiteki.query.filter_by(musubi_code=code).all()
+        print(reiteki_list)
 
-        if not data_alpha and data_beta:
-            return 'musubi alpha not exists'
-        elif not data_beta and data_alpha:
-            return 'musubi beta not exists'
-        elif not data_alpha and not data_beta:
-            return 'musubi code not exists'
+        if not reiteki_list:
+            return 'no related reiteki exists'
+        elif len(reiteki_list) != 2:
+            return 'no reiteki pair exists'
         else:
-            alpha = {'alpha': data_alpha.to_dict()}
-            beta = {'beta': data_beta.to_dict()}
+            first= {'first': reiteki_list[0].to_dict()}
+            second = {'second': reiteki_list[1].to_dict()}
 
-            ab_data = {**alpha, **beta}
-            ab_data['musubi_code'] = alpha_code
-            print(ab_data)
-            return ab_data
+            paired_reiteki = {**first, **second}
+            paired_reiteki['musubi_code'] = code
+            print(paired_reiteki)
+            return paired_reiteki
 
 
 

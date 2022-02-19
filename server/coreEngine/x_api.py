@@ -2,7 +2,7 @@
 api.py
 - provides the API endpoints for consuming and producing
   REST requests and responses
-Created by Xiong, Kaijie on 2022-02-18.
+Created by Xiong, Kaijie on 2022-02-15.
 Copyright © 2021 Xiong, Kaijie. All rights reserved.
 """
 
@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 import random
 import requests
 
-from .models import db, Musubi, Reiteki
+from .x_models import db, Musubi, MusubiAlpha, MusubiBeta
 from .utils import Tools, DataHandler
 
 
@@ -24,7 +24,7 @@ api = Blueprint('api', __name__)
 
 @api.route('/test/', methods=['GET'])
 def test():
-    return '孙婉宁我爱你呀'
+    return '...'
 
 
 # -------------------------------------- Registration ---------------------------------
@@ -56,8 +56,8 @@ def register_test():
     return jsonify(musubi.to_dict()), 201
 
 
-@api.route('/register-reiteki/', methods=['POST'])
-def register_reiteki():
+@api.route('/register-alpha/', methods=['POST'])
+def register_alpha():
     data = request.get_json(force=True)
     default_musubi_code = Tools.gen_default_musubi_code()
     data['musubi_code'] = default_musubi_code
@@ -68,63 +68,58 @@ def register_reiteki():
     if not new_username or not new_password:
         return jsonify({'message': 'Please fill the needed info'}), 406
 
-    find_username = Reiteki.query.filter_by(username=new_username).first()
+    find_username_alpha = MusubiAlpha.query.filter_by(username=new_username).first()
+    find_username_beta = MusubiBeta.query.filter_by(username=new_username).first()
 
-    if find_username:
+    if find_username_alpha or find_username_beta:
         # returns 409 if the username exists
         return jsonify({'message': 'Username exists'}), 409
     
-    new_reiteki = Reiteki(**data)
-    db.session.add(new_reiteki)
+    musubi_alpha = MusubiAlpha(**data)
+    db.session.add(musubi_alpha)
     db.session.commit()
-    return jsonify(new_reiteki.to_dict()), 201
+    return jsonify(musubi_alpha.to_dict()), 201
 
 
-@api.route('/bind-reiteki/<default_musubi_code>/', methods=['POST'])
-def bind_reiteki(default_musubi_code):
-    get_first_reiteki = Reiteki.query.filter_by(musubi_code=default_musubi_code).first()
-    if not get_first_reiteki:
-        return jsonify({'message': 'default musubi code from first reiteki not exists'}), 406
+@api.route('/register-beta/<default_musubi_code>/', methods=['POST'])
+def register_beta(default_musubi_code):
+    find_alpha = MusubiAlpha.query.filter_by(musubi_code=default_musubi_code).first()
+    if not find_alpha:
+        return jsonify({'message': 'default musubi code from alpha not exists'}), 406
 
-    count_reiteki = Reiteki.query.filter_by(musubi_code=default_musubi_code).count()
-    if count_reiteki > 1:
+    find_beta = MusubiBeta.query.filter_by(musubi_code=default_musubi_code).first()
+    if find_beta:
         return jsonify({'message': 'musubi code already used'}), 406
 
     data = request.get_json(force=True)
     data['musubi_code'] = default_musubi_code
     print(data)
-
     new_username = data['username']
     new_password = data['password']
+
     if not new_username or not new_password:
         return jsonify({'message': 'Please fill the needed info'}), 406
 
-    find_username = Reiteki.query.filter_by(username=new_username).first()
-    if find_username:
+    find_username_alpha = MusubiAlpha.query.filter_by(username=new_username).first()
+    find_username_beta = MusubiBeta.query.filter_by(username=new_username).first()
+
+    if find_username_alpha or find_username_beta:
         # returns 409 if the username exists
-        return jsonify({'message': 'Username already used'}), 409
+        return jsonify({'message': 'Username exists'}), 409
     
-    another_reiteki = Reiteki(**data)
-    another_reiteki.bound = 1
-    db.session.add(another_reiteki)
-    get_first_reiteki.bound = 1
+    musubi_beta = MusubiBeta(**data)
+    db.session.add(musubi_beta)
     db.session.commit()
+    return jsonify(musubi_beta.to_dict()), 201
 
-    return jsonify(another_reiteki.to_dict()), 201
 
-
-@api.route('/create-musubi/<default_musubi_code>/', methods=['GET'])
-def create_musubi(default_musubi_code):
-    # find_musubi_code = Reiteki.query.filter_by(musubi_code=default_musubi_code).first()
-    # if not find_musubi_code:
-    #     # returns 409 if the musubi code exists
-    #     return jsonify({'message': 'Musubi code not exists'}), 409
-    
+@api.route('/merge-musubi/<default_musubi_code>/', methods=['GET'])
+def merge_musubi(default_musubi_code):
     find_musubi = Musubi.query.filter_by(musubi_code=default_musubi_code).first()
     if find_musubi:
         return jsonify({'message': 'Musubi code already used'}), 406
         
-    data = DataHandler.get_paired_reiteki(default_musubi_code)
+    data = DataHandler.get_ab_data(default_musubi_code)
     new_data = {}
 
     if isinstance(data, dict):
@@ -133,7 +128,18 @@ def create_musubi(default_musubi_code):
         if not new_musubi_code:
             return jsonify({'message': 'musubi code needed'}), 406
         
+        find_musubi_code = MusubiAlpha.query.filter_by(musubi_code=new_musubi_code).first()
+        if not find_musubi_code:
+            # returns 409 if the musubi code exists
+            return jsonify({'message': 'Musubi code not exists'}), 409
+        
         new_data['musubi_code'] = data['musubi_code']
+        new_data['username_alpha'] = data['alpha']['username']
+        new_data['password_alpha'] = data['alpha']['password']
+        new_data['disname_alpha'] =data['alpha']['disname']
+        new_data['username_beta'] = data['beta']['username']
+        new_data['password_beta'] = data['beta']['password']
+        new_data['disname_beta'] =data['beta']['disname']
         print(new_data)
 
         musubi = Musubi(**new_data)
@@ -142,6 +148,7 @@ def create_musubi(default_musubi_code):
         return jsonify(musubi.to_dict()), 201
 
     return jsonify(data), 406
+
 
 
 # -------------------------------------- Login ---------------------------------
@@ -171,29 +178,42 @@ def login():
         # returns 401 if any username or / and password is missing
         return jsonify({'message': 'Login required', 'authenticated': False}), 401
 
-    get_reiteki = Reiteki.query.filter_by(username=username).first()
+    is_alpha = MusubiAlpha.query.filter_by(username=username).first()
+    is_beta = MusubiBeta.query.filter_by(username=username).first()
 
-    if not get_reiteki:
+    if not is_alpha and not is_beta:
         # returns 401 if the cdsid is not existing
         return jsonify({'message': 'User not found', 'authenticated': False}), 401
     
-    if check_password_hash(get_reiteki.password, password):
-        # generates the JWT Token
-        token = jwt.encode({
-            'uid': get_reiteki.username,
-            'iat': datetime.utcnow(),
-            'exp': datetime.utcnow() + timedelta(minutes=60)
-        }, current_app.config['SECRET_KEY'], algorithm="HS256"),
-        print(Tools.convert_tuple(token))
+    if is_alpha:
+        if check_password_hash(is_alpha.password, password):
+            # generates the JWT Token
+            token = jwt.encode({
+                'uid': is_alpha.username,
+                'iat': datetime.utcnow(),
+                'exp': datetime.utcnow() + timedelta(minutes=60)
+            }, current_app.config['SECRET_KEY'], algorithm="HS256"),
+            print(Tools.convert_tuple(token))
 
-        is_musubi_completed = Musubi.query.filter_by(musubi_code=get_reiteki.musubi_code).first()
-        count_reiteki = Reiteki.query.filter_by(musubi_code=get_reiteki.musubi_code).count()
-        if not is_musubi_completed and count_reiteki == 1:
-            return jsonify({'token': Tools.convert_tuple(token), 'username': get_reiteki.username, 'status': 'not completed'}), 200
-        else:
-            return jsonify({'token': Tools.convert_tuple(token), 'username': get_reiteki.username, 'status': 'completed'}), 200
-    # returns 403 if password is wrong
-    return jsonify({'message': 'Invalid credentials', 'authenticated': False}), 403
+            is_musubi_completed = Musubi.query.filter_by(musubi_code=is_alpha.musubi_code).first()
+            if not is_musubi_completed:
+                return jsonify({'token': Tools.convert_tuple(token), 'username': is_alpha.username, 'type': 'alpha', 'status': 'not completed'}), 200
+            else:
+                return jsonify({'token': Tools.convert_tuple(token), 'username': is_alpha.username, 'type': 'alpha', 'status': 'completed'}), 200
+        # returns 403 if password is wrong
+        return jsonify({'message': 'Invalid credentials', 'authenticated': False}), 403
+    else:
+        if check_password_hash(is_beta.password, password):
+            # generates the JWT Token
+            token = jwt.encode({
+                'uid': is_beta.username,
+                'iat': datetime.utcnow(),
+                'exp': datetime.utcnow() + timedelta(minutes=60)
+            }, current_app.config['SECRET_KEY'], algorithm="HS256"),
+            print(Tools.convert_tuple(token))
+            return jsonify({'token': Tools.convert_tuple(token), 'username': is_beta.username, 'type': 'beta'}), 200
+        # returns 403 if password is wrong
+        return jsonify({'message': 'Invalid credentials', 'authenticated': False}), 403
 
 
 # -------------------------------------- Get all data ---------------------------------
@@ -213,8 +233,8 @@ def get_musubis():
     return jsonify({'musubis': [m.to_dict() for m in musubis]})
 
 
-@api.route('/reitekis/', methods=['GET'])
-def get_reitekis():
+@api.route('/musubialphas/', methods=['GET'])
+def get_musubialphas():
     """This function is used to get all users that stored in local database
 
     Args:
@@ -223,34 +243,20 @@ def get_reitekis():
     Returns:
         JSON: All users' info in database
     """
-    reitekis = Reiteki.query.all()
-    return jsonify({'reiteki': [r.to_dict() for r in reitekis]})
+    musubialphas = MusubiAlpha.query.all()
+    return jsonify({'musubialphas': [m.to_dict() for m in musubialphas]})
 
 
-# @api.route('/musubialphas/', methods=['GET'])
-# def get_musubialphas():
-#     """This function is used to get all users that stored in local database
+@api.route('/musubibetas/', methods=['GET'])
+def get_musubibetas():
+    """This function is used to get all users that stored in local database
 
-#     Args:
-#         current_user (String): the uid of current user
+    Args:
+        current_user (String): the uid of current user
 
-#     Returns:
-#         JSON: All users' info in database
-#     """
-#     musubialphas = MusubiAlpha.query.all()
-#     return jsonify({'musubialphas': [m.to_dict() for m in musubialphas]})
-
-
-# @api.route('/musubibetas/', methods=['GET'])
-# def get_musubibetas():
-#     """This function is used to get all users that stored in local database
-
-#     Args:
-#         current_user (String): the uid of current user
-
-#     Returns:
-#         JSON: All users' info in database
-#     """
-#     musubibetas = MusubiBeta.query.all()
-#     return jsonify({'musubibetas': [m.to_dict() for m in musubibetas]})
+    Returns:
+        JSON: All users' info in database
+    """
+    musubibetas = MusubiBeta.query.all()
+    return jsonify({'musubibetas': [m.to_dict() for m in musubibetas]})
 
