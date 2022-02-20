@@ -213,6 +213,14 @@ def get_musubis():
     return jsonify({'musubis': [m.to_dict() for m in musubis]})
 
 
+@api.route('/get-musubis-by-code/<musubi_code>/', methods=['GET'])
+def get_musubis_by_code(musubi_code):
+    musubis = Musubi.query.filter_by(musubi_code=musubi_code).all()
+    if not musubis:
+        return jsonify({'message': 'musubi code not valid'}), 406
+    return jsonify({'musubis': [m.to_dict() for m in musubis]})
+
+
 @api.route('/reitekis/', methods=['GET'])
 def get_reitekis():
     """This function is used to get all users that stored in local database
@@ -225,6 +233,14 @@ def get_reitekis():
     """
     reitekis = Reiteki.query.all()
     return jsonify({'reiteki': [r.to_dict() for r in reitekis]})
+
+
+@api.route('/get-reitekis-by-code/<musubi_code>/', methods=['GET'])
+def get_reitekis_by_code(musubi_code):
+    reitekis = Reiteki.query.filter_by(musubi_code=musubi_code).all()
+    if not reitekis:
+        return jsonify({'message': 'musubi code not valid'}), 406
+    return jsonify({'musubis': [r.to_dict() for r in reitekis]})
 
 
 # @api.route('/musubialphas/', methods=['GET'])
