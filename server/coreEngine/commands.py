@@ -55,7 +55,8 @@ def forge():
         db.session.add(post)
     
     bubblejars = [
-      {'name': '第一个泡泡罐子', 'description': '测试数据', 'author_id': 1}
+      {'name': '第一个泡泡罐子', 'description': '测试数据', 'author_id': 1},
+      {'name': '第二个泡泡罐子', 'description': '测试数据', 'author_id': 2}
     ]
     for b in bubblejars:
         bubblejar = BubbleJar(name=b['name'], description=b['description'], author_id=b['author_id'])
@@ -64,6 +65,7 @@ def forge():
     bubbles = [
       {'title': '第一个泡泡', 'content': '测试数据啦啦啦', 'bubblejar_id': 1, 'author_id': 1},
       {'title': '第二个泡泡', 'content': '测试数据啦啦啦', 'bubblejar_id': 1, 'author_id': 1},
+      {'title': '泡泡', 'content': '测试数据啦啦啦', 'bubblejar_id': 2, 'author_id': 2}
     ]
     for b in bubbles:
         bubble = Bubble(title=b['title'], content=b['content'], bubblejar_id=b['bubblejar_id'], author_id=b['author_id'])

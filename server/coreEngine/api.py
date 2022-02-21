@@ -6,16 +6,12 @@ Created by Xiong, Kaijie on 2022-02-18.
 Copyright © 2021 Xiong, Kaijie. All rights reserved.
 """
 
-from turtle import pos
 from flask import Blueprint, jsonify, request, current_app
-from itsdangerous import json
 
 from werkzeug.security import check_password_hash
 import jwt
 
 from datetime import datetime, timedelta
-import random
-import requests
 
 from .models import db, Musubi, Reiteki, Post, BubbleJar, Bubble
 from .utils import Tools, DataHandler
@@ -213,7 +209,7 @@ def update_musubi_code(musubi_code):
     if not musubi or not reiteki_list:
         return jsonify({'message': 'musubi code not valid'}), 404
 
-    data = request.get_json()
+    data = request.get_json(force=True)
     print(data)
     new_musubi_code = data['musubi_code']
 
@@ -227,7 +223,7 @@ def update_musubi_code(musubi_code):
         for r in reiteki_list:
             r.musubi_code = new_musubi_code
         db.session.commit()
-        return jsonify({'message': 'musubi code updated', 'musubi': musubi.to_dict(), 'reitekis': [r.to_dict for r in reiteki_list]}), 201
+        return jsonify({'message': 'musubi code updated', 'musubi': musubi.to_dict(), 'reitekis': [r.to_dict() for r in reiteki_list]}), 201
     else:
         return jsonify({'message': 'musubi code already used'}), 406
 
@@ -257,7 +253,7 @@ def get_update_musubi_info(musubi_code):
         return jsonify({'musubi': musubi.to_dict()})
 
     elif request.method == 'PUT':
-        data = request.get_json()
+        data = request.get_json(force=True)
         print(data)
         about = data['about']
         musubi.about = about
@@ -298,25 +294,28 @@ def get_update_reiteki_by_username(reiteki_username):
         return jsonify({'reiteki': reiteki.to_dict()})
 
     elif request.method == 'PUT':
-        data = request.get_json()
+        data = request.get_json(force=True)
         print(data)
 
-        new_username = data['username']
-        check_username = Reiteki.query.filter_by(username=new_username).first()
-        if check_username:
-            return jsonify({'message': 'username already exists'}), 406
-        else:
-            reiteki.username = new_username
+        if data.get('username'):
+            check_username = Reiteki.query.filter_by(username=data['username']).first()
+            if check_username:
+                return jsonify({'message': 'username already exists'}), 406
+            else:
+                reiteki.username = data['username']
+        if data.get('disname'):
             reiteki.disname = data['disname']
+        if data.get('profile'):
             reiteki.profile = data['profile']
-            db.session.commit()
-            return jsonify({'message':'reiteki updated', 'reiteki': reiteki.to_dict()}), 201
+        
+        db.session.commit()
+        return jsonify({'message':'reiteki updated', 'reiteki': reiteki.to_dict()}), 201
 
 
 # Post
 @api.route('/create-post/', methods=['POST'])
 def create_post():
-    data = request.get_json()
+    data = request.get_json(force=True)
     new_post = Post(**data)
     db.session.add(new_post)
     db.session.commit()
@@ -327,6 +326,16 @@ def create_post():
 def get_all_posts():
     posts = Post.query.all()
     return jsonify({'posts': [p.to_dict() for p in posts]})
+
+
+@api.route('/get-all-public-posts/', methods=['GET'])
+def get_all_pubicl_posts():
+    posts = Post.query.all()
+    posts_list = []
+    for p in posts:
+        if p.is_public == True:
+            posts_list.append(p)
+    return jsonify({'posts': [p.to_dict() for p in posts_list]})
 
 
 @api.route('/get-posts-by-reiteki/<int:reiteki_id>/', methods=['GET'])
@@ -345,7 +354,7 @@ def get_posts_by_username(reiteki_username):
     return jsonify({'posts': reiteki.get_all_posts()})
 
 
-@api.route('/get-update-post/<int:post_id>', methods=['GET', 'PUT'])
+@api.route('/get-update-post/<int:post_id>/', methods=['GET', 'PUT'])
 def get_update_post(post_id):
     post = Post.query.get(post_id)
     if not post:
@@ -354,27 +363,27 @@ def get_update_post(post_id):
     if request.method == 'GET':
         return jsonify({'post': post.to_dict()})
     elif request.method == 'PUT':
-        data = request.get_json()
+        data = request.get_json(force=True)
         print(data)
         post.content = data['content']
         db.session.commit()
         return jsonify({'message':'post content updated', 'post': post.to_dict()}), 201
 
 
-@api.route('/update-post-visibility/<int:post_id>', methods=['PUT'])
+@api.route('/update-post-visibility/<int:post_id>/', methods=['PUT'])
 def update_post_visibility(post_id):
     post = Post.query.get(post_id)
     if not post:
         return jsonify({'message': 'post not exists'}), 404
 
-    data = request.get_json()
+    data = request.get_json(force=True)
     print(data)
     post.is_public = data['is_public']
     db.session.commit()
     return jsonify({'message':'post visibility updated', 'post': post.to_dict()}), 201
 
 
-@api.route('/delete-post/<int:post_id>', methods=['DELETE'])
+@api.route('/delete-post/<int:post_id>/', methods=['DELETE'])
 def delete_post(post_id):
     post = Post.query.get(post_id)
     if not post:
@@ -387,7 +396,7 @@ def delete_post(post_id):
 # Bubble jar
 @api.route('/create-bubblejar/', methods=['POST'])
 def create_bubblejar():
-    data = request.get_json()
+    data = request.get_json(force=True)
     new_bubblejar = BubbleJar(**data)
     db.session.add(new_bubblejar)
     db.session.commit()
@@ -416,7 +425,7 @@ def get_bubblejars_by_username(reiteki_username):
     return jsonify({'bubblejars': reiteki.get_all_bubblejars()})
 
 
-@api.route('/get-update-bubblejar/<int:bubblejar_id>', methods=['GET', 'PUT'])
+@api.route('/get-update-bubblejar/<int:bubblejar_id>/', methods=['GET', 'PUT'])
 def get_update_bubblejar(bubblejar_id):
     bubblejar= BubbleJar.query.get(bubblejar_id)
     if not bubblejar:
@@ -425,28 +434,31 @@ def get_update_bubblejar(bubblejar_id):
     if request.method == 'GET':
         return jsonify({'bubblejar': bubblejar.to_dict()})
     elif request.method == 'PUT':
-        data = request.get_json()
+        data = request.get_json(force=True)
         print(data)
-        bubblejar.name = data['name']
-        bubblejar.description = data['description']
+
+        if data.get('name'):
+            bubblejar.name = data['name']
+        if data.get('description'):
+            bubblejar.description = data['description']
         db.session.commit()
         return jsonify({'message':'bubblejar updated', 'bubblejar': bubblejar.to_dict()}), 201
 
 
-@api.route('/update-bubblejar-visibility/<int:bubblejar_id>', methods=['PUT'])
+@api.route('/update-bubblejar-visibility/<int:bubblejar_id>/', methods=['PUT'])
 def update_bubblejar_visibility(bubblejar_id):
     bubblejar = BubbleJar.query.get(bubblejar_id)
     if not bubblejar:
         return jsonify({'message': 'bubblejar not exists'}), 404
 
-    data = request.get_json()
+    data = request.get_json(force=True)
     print(data)
     bubblejar.is_public = data['is_public']
     db.session.commit()
     return jsonify({'message':'bubblejar visibility updated', 'bubblejar': bubblejar.to_dict()}), 201
 
 
-@api.route('/delete-bubblejar/<int:bubblejar_id>', methods=['DELETE'])
+@api.route('/delete-bubblejar/<int:bubblejar_id>/', methods=['DELETE'])
 def delete_bubblejar(bubblejar_id):
     bubblejar = BubbleJar.query.get(bubblejar_id)
     if not bubblejar:
@@ -464,7 +476,7 @@ def delete_bubblejar(bubblejar_id):
 # Bubble
 @api.route('/create-bubble/', methods=['POST'])
 def create_bubble():
-    data = request.get_json()
+    data = request.get_json(force=True)
     new_bubble = Bubble(**data)
     db.session.add(new_bubble)
     db.session.commit()
@@ -501,7 +513,7 @@ def get_bubbles_by_jar(jar_id):
     return jsonify({'bubbles': jar.get_all_bubbles()})
 
 
-@api.route('/get-update-bubble/<int:bubble_id>', methods=['GET', 'PUT'])
+@api.route('/get-update-bubble/<int:bubble_id>/', methods=['GET', 'PUT'])
 def get_update_bubble(bubble_id):
     bubble= Bubble.query.get(bubble_id)
     if not bubble:
@@ -510,28 +522,31 @@ def get_update_bubble(bubble_id):
     if request.method == 'GET':
         return jsonify({'bubble': bubble.to_dict()})
     elif request.method == 'PUT':
-        data = request.get_json()
+        data = request.get_json(force=True)
         print(data)
-        bubble.title = data['title']
-        bubble.content = data['content']
+
+        if data.get('title'):
+            bubble.title = data['title']
+        if data.get('content'):
+            bubble.content = data['content']
         db.session.commit()
         return jsonify({'message':'bubble updated', 'bubble': bubble.to_dict()}), 201
 
 
-@api.route('/update-bubble-visibility/<int:bubble_id>', methods=['PUT'])
+@api.route('/update-bubble-visibility/<int:bubble_id>/', methods=['PUT'])
 def update_bubble_visibility(bubble_id):
     bubble = Bubble.query.get(bubble_id)
     if not bubble:
         return jsonify({'message': 'bubble not exists'}), 404
 
-    data = request.get_json()
+    data = request.get_json(force=True)
     print(data)
     bubble.is_public = data['is_public']
     db.session.commit()
     return jsonify({'message':'bubble visibility updated', 'bubble': bubble.to_dict()}), 201
 
 
-@api.route('/delete-bubble/<int:bubble_id>', methods=['DELETE'])
+@api.route('/delete-bubble/<int:bubble_id>/', methods=['DELETE'])
 def delete_bubble(bubble_id):
     bubble = Bubble.query.get(bubble_id)
     if not bubble:
