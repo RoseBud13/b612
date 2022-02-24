@@ -11,7 +11,8 @@ Copyright © 2021 Volvo Car Corporation. All rights reserved.
 import click
 
 from flask import Blueprint
-from coreEngine.models import db, Musubi, Reiteki, Post, BubbleJar, Bubble
+from sqlalchemy import false
+from coreEngine.models import db, Musubi, User, Post, BubbleJar, Bubble
 
 cmd = Blueprint('cmd', __name__)
 
@@ -30,13 +31,13 @@ def initdb(drop):
 def forge():
     """Generate mockup data."""
 
-    reitekis = [
-      {'musubi_code': 'sun_to_jupiter', 'username': 'wanning', 'password': '123123', 'disname': '孙婉宁', 'profile': '我喜欢熊恺杰', 'bound': 1},
-      {'musubi_code': 'sun_to_jupiter', 'username': 'kaijie', 'password': '123123', 'disname': '熊恺杰', 'profile': '我喜欢孙婉宁', 'bound': 1},
+    users = [
+      {'is_reiteki': True, 'musubi_code': 'sun_to_jupiter', 'username': 'wanning', 'password': '123123', 'disname': '孙婉宁', 'profile': '我喜欢熊恺杰', 'bound': 1},
+      {'is_reiteki': True, 'musubi_code': 'sun_to_jupiter', 'username': 'kaijie', 'password': '123123', 'disname': '熊恺杰', 'profile': '我喜欢孙婉宁', 'bound': 1},
     ]
-    for r in reitekis:
-        reiteki = Reiteki(musubi_code=r['musubi_code'], username=r['username'], password=r['password'], disname=r['disname'], profile=r['profile'], bound=r['bound'])
-        db.session.add(reiteki)
+    for u in users:
+        user = User(is_reiteki=u['is_reiteki'], musubi_code=u['musubi_code'], username=u['username'], password=u['password'], disname=u['disname'], profile=u['profile'], bound=u['bound'])
+        db.session.add(user)
     
     musubis = [
       {'musubi_code': 'sun_to_jupiter', 'about': '孙婉宁和熊恺杰的测试小数据'},
@@ -46,12 +47,13 @@ def forge():
         db.session.add(musubi)
     
     posts = [
-      {'content': '第一条动态, 今天吃了好多', 'author_id': 1},
-      {'content': '第二条动态, 昨天也吃了好多', 'author_id': 2},
-      {'content': '第三条动态, 天天都吃了好多', 'author_id': 2}
+      {'content': '第一条动态, 今天吃了好多', 'is_public': False, 'author_id': 1},
+      {'content': '第二条动态, 昨天也吃了好多', 'is_public': False, 'author_id': 2},
+      {'content': '第三条动态, 天天都吃了好多', 'is_public': False, 'author_id': 2},
+      {'content': '今天好困啊阿啊', 'is_public': True, 'author_id': 2}
     ]
     for p in posts:
-        post = Post(content=p['content'], author_id=p['author_id'])
+        post = Post(content=p['content'], is_public=p['is_public'], author_id=p['author_id'])
         db.session.add(post)
     
     bubblejars = [

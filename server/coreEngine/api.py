@@ -10,17 +10,18 @@ from flask import Blueprint, jsonify, request, current_app
 
 from werkzeug.security import check_password_hash
 import jwt
+from functools import wraps
 
 from datetime import datetime, timedelta
 
-from .models import db, Musubi, Reiteki, Post, BubbleJar, Bubble
+from .models import db, Musubi, User, Post, BubbleJar, Bubble
 from .utils import Tools, DataHandler
 
 
 api = Blueprint('api', __name__)
 
 
-@api.route('/test/', methods=['GET'])
+@api.route('/test', methods=['GET'])
 def test():
     return '孙婉宁我爱你呀'
 
@@ -28,7 +29,7 @@ def test():
 # -------------------------------------- Registration ---------------------------------
 
 # Test
-@api.route('/register-test/', methods=['POST'])
+@api.route('/register-test', methods=['POST'])
 def register_test():
     """
     This function is used to test registration of new user to local database
@@ -54,12 +55,15 @@ def register_test():
     return jsonify(musubi.to_dict()), 201
 
 
-# Reitki (first user account)
-@api.route('/register-reiteki/', methods=['POST'])
-def register_reiteki():
+# User (first user account)
+@api.route('/register-user', methods=['POST'])
+def register_user():
     data = request.get_json(force=True)
-    default_musubi_code = Tools.gen_default_musubi_code()
-    data['musubi_code'] = default_musubi_code
+
+    if data.get('is_reiteki') and data['is_reiteki'] == True:
+        default_musubi_code = Tools.gen_default_musubi_code()
+        data['musubi_code'] = default_musubi_code
+
     print(data)
     new_username = data['username']
     new_password = data['password']
@@ -67,31 +71,32 @@ def register_reiteki():
     if not new_username or not new_password:
         return jsonify({'message': 'Please fill the needed info'}), 406
 
-    find_username = Reiteki.query.filter_by(username=new_username).first()
+    find_username = User.query.filter_by(username=new_username).first()
 
     if find_username:
         # returns 409 if the username exists
         return jsonify({'message': 'Username exists'}), 409
     
-    new_reiteki = Reiteki(**data)
-    db.session.add(new_reiteki)
+    new_user = User(**data)
+    db.session.add(new_user)
     db.session.commit()
-    return jsonify(new_reiteki.to_dict()), 201
+    return jsonify(new_user.to_dict()), 201
 
 
 # Reiteki (second user account)
-@api.route('/bind-reiteki/<default_musubi_code>/', methods=['POST'])
+@api.route('/bind-reiteki/<default_musubi_code>', methods=['POST'])
 def bind_reiteki(default_musubi_code):
-    get_first_reiteki = Reiteki.query.filter_by(musubi_code=default_musubi_code).first()
+    get_first_reiteki = User.query.filter_by(musubi_code=default_musubi_code).first()
     if not get_first_reiteki:
         return jsonify({'message': 'default musubi code from first reiteki not exists'}), 406
 
-    count_reiteki = Reiteki.query.filter_by(musubi_code=default_musubi_code).count()
+    count_reiteki = User.query.filter_by(musubi_code=default_musubi_code).count()
     if count_reiteki > 1:
         return jsonify({'message': 'musubi code already used'}), 406
 
     data = request.get_json(force=True)
     data['musubi_code'] = default_musubi_code
+    data['is_reiteki'] = True
     print(data)
 
     new_username = data['username']
@@ -99,12 +104,12 @@ def bind_reiteki(default_musubi_code):
     if not new_username or not new_password:
         return jsonify({'message': 'Please fill the needed info'}), 406
 
-    find_username = Reiteki.query.filter_by(username=new_username).first()
+    find_username = User.query.filter_by(username=new_username).first()
     if find_username:
         # returns 409 if the username exists
         return jsonify({'message': 'Username already used'}), 409
     
-    another_reiteki = Reiteki(**data)
+    another_reiteki = User(**data)
     another_reiteki.bound = 1
     db.session.add(another_reiteki)
     get_first_reiteki.bound = 1
@@ -114,13 +119,8 @@ def bind_reiteki(default_musubi_code):
 
 
 # Musubi (user couple entity)
-@api.route('/create-musubi/<default_musubi_code>/', methods=['POST'])
+@api.route('/create-musubi/<default_musubi_code>', methods=['POST'])
 def create_musubi(default_musubi_code):
-    # find_musubi_code = Reiteki.query.filter_by(musubi_code=default_musubi_code).first()
-    # if not find_musubi_code:
-    #     # returns 409 if the musubi code exists
-    #     return jsonify({'message': 'Musubi code not exists'}), 409
-    
     find_musubi = Musubi.query.filter_by(musubi_code=default_musubi_code).first()
     if find_musubi:
         return jsonify({'message': 'Musubi code already used'}), 406
@@ -145,11 +145,11 @@ def create_musubi(default_musubi_code):
     return jsonify(data), 406
 
 
-# -------------------------------------- Login ---------------------------------
+# -------------------------------------- Login & Authentication---------------------------------
 
 
 # Login
-@api.route('/login/', methods=['POST'])
+@api.route('/login', methods=['POST'])
 def login():
     """
     This function is constructed for local login.
@@ -173,39 +173,91 @@ def login():
         # returns 401 if any username or / and password is missing
         return jsonify({'message': 'Login required', 'authenticated': False}), 401
 
-    get_reiteki = Reiteki.query.filter_by(username=username).first()
+    get_user = User.query.filter_by(username=username).first()
 
-    if not get_reiteki:
+    if not get_user:
         # returns 401 if the cdsid is not existing
         return jsonify({'message': 'User not found', 'authenticated': False}), 401
     
-    if check_password_hash(get_reiteki.password, password):
+    if check_password_hash(get_user.password, password):
         # generates the JWT Token
         token = jwt.encode({
-            'uid': get_reiteki.id,
+            'uid': get_user.id,
             'iat': datetime.utcnow(),
             'exp': datetime.utcnow() + timedelta(minutes=60)
         }, current_app.config['SECRET_KEY'], algorithm="HS256"),
         print(Tools.convert_tuple(token))
 
-        is_musubi_completed = Musubi.query.filter_by(musubi_code=get_reiteki.musubi_code).first()
-        count_reiteki = Reiteki.query.filter_by(musubi_code=get_reiteki.musubi_code).count()
+        is_musubi_completed = Musubi.query.filter_by(musubi_code=get_user.musubi_code).first()
+        count_reiteki = User.query.filter_by(musubi_code=get_user.musubi_code).count()
         if not is_musubi_completed and count_reiteki == 1:
-            return jsonify({'token': Tools.convert_tuple(token), 'username': get_reiteki.username, 'id': get_reiteki.id, 'status': 'not completed'}), 200
+            return jsonify({'token': Tools.convert_tuple(token), 'username': get_user.username, 'id': get_user.id, 'status': 'not completed'}), 200
         else:
-            return jsonify({'token': Tools.convert_tuple(token), 'username': get_reiteki.username, 'id': get_reiteki.id, 'status': 'completed'}), 200
+            return jsonify({'token': Tools.convert_tuple(token), 'username': get_user.username, 'id': get_user.id, 'status': 'completed'}), 200
     # returns 403 if password is wrong
     return jsonify({'message': 'Invalid credentials', 'authenticated': False}), 403
+
+
+# Authentication
+def login_required(f):
+    @wraps(f)
+    def _verify(*args, **kwargs):
+        """This decorator function is used to check if the credential token is included
+        during requiring from client to server
+
+        Raises:
+            RuntimeError: 'User not found'
+
+        Returns:
+            [JSON]: If authentocation succeed, returns the uid of current user.
+                If faild, returns error message and corresponding HTTP code.
+        """
+
+        token = None
+
+        invalid_msg = {
+            'message': 'Invalid token. Registeration or authentication required',
+            'authenticated': False,
+            'code': 401
+        }
+        expired_msg = {
+            'message': 'Expired token. Reauthentication required.',
+            'authenticated': False,
+            'code': 401
+        }
+
+        # jwt is passed in the request header
+        if 'Authorization' in request.headers:
+            token = request.headers['Authorization']
+        # return 401 if token is not passed
+        if not token:
+            return jsonify({'message': 'Token required'}), 401
+
+        try:
+            data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms="HS256")
+            print(data)
+            current_user = data['uid']
+            print(current_user)
+            if not current_user:
+                raise RuntimeError('User not found')
+            return f(current_user, *args, **kwargs)
+        except jwt.ExpiredSignatureError:
+            return jsonify(expired_msg), 401  # 401 is Unauthorized HTTP status code
+        except (jwt.InvalidTokenError, Exception) as e:
+            print(e)
+            return jsonify(invalid_msg), 401
+
+    return _verify
 
 
 # -------------------------------------- Data CRUD---------------------------------
 
 
 # Musubi code
-@api.route('/update-musubi-code/<musubi_code>/', methods=['PUT'])
+@api.route('/update-musubi-code/<musubi_code>', methods=['PUT'])
 def update_musubi_code(musubi_code):
     musubi = Musubi.query.filter_by(musubi_code=musubi_code).first()
-    reiteki_list = Reiteki.query.filter_by(musubi_code=musubi_code).all()
+    reiteki_list = User.query.filter_by(musubi_code=musubi_code).all()
     if not musubi or not reiteki_list:
         return jsonify({'message': 'musubi code not valid'}), 404
 
@@ -215,7 +267,7 @@ def update_musubi_code(musubi_code):
 
     check_musubi_code_musubi = Musubi.query.filter_by(musubi_code=new_musubi_code).count()
     print(check_musubi_code_musubi)
-    check_musubi_code_reiteki = Reiteki.query.filter_by(musubi_code=new_musubi_code).count()
+    check_musubi_code_reiteki = User.query.filter_by(musubi_code=new_musubi_code).count()
     print(check_musubi_code_reiteki)
 
     if check_musubi_code_musubi == 0 and check_musubi_code_reiteki == 0:
@@ -229,7 +281,7 @@ def update_musubi_code(musubi_code):
 
 
 # Musubi
-@api.route('/musubis/', methods=['GET'])
+@api.route('/musubis', methods=['GET'])
 def get_musubis():
     """This function is used to get all users that stored in local database
 
@@ -243,7 +295,7 @@ def get_musubis():
     return jsonify({'musubis': [m.to_dict() for m in musubis]})
 
 
-@api.route('/get-update-musubi-info/<musubi_code>/', methods=['GET', 'PUT'])
+@api.route('/get-update-musubi-info/<musubi_code>', methods=['GET', 'PUT'])
 def get_update_musubi_info(musubi_code):
     musubi = Musubi.query.filter_by(musubi_code=musubi_code).first()
     if not musubi:
@@ -261,8 +313,8 @@ def get_update_musubi_info(musubi_code):
         return jsonify(musubi.to_dict()), 201
 
 
-# Reiteki
-@api.route('/reitekis/', methods=['GET'])
+# Users / Reitekis
+@api.route('/users', methods=['GET'])
 def get_reitekis():
     """This function is used to get all users that stored in local database
 
@@ -272,48 +324,66 @@ def get_reitekis():
     Returns:
         JSON: All users' info in database
     """
-    reitekis = Reiteki.query.all()
-    return jsonify({'reiteki': [r.to_dict() for r in reitekis]})
+    users = User.query.all()
+    return jsonify({'users': [u.to_dict() for u in users]})
 
 
-@api.route('/get-reitekis-by-code/<musubi_code>/', methods=['GET'])
+@api.route('/update-user-to-reiteki/<username>', methods=['PUT'])
+def update_user_to_reiteki(username):
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        return jsonify({'message': 'user not found'}), 404
+
+    if user.is_reiteki == False and user.musubi_code == None:
+        user.is_reiteki = True
+        if request.args.get('musubicode'):
+            user.musubi_code = request.args.get('musubicode')
+        else:
+            user.musubi_code = Tools.gen_default_musubi_code()
+        db.session.commit()
+        return jsonify({'message':'user updated to reiteki', 'user': user.to_dict()}), 201
+    else:
+        return jsonify({'message': 'user alreay is reiteki', 'user':user.to_dict()}), 406
+
+
+@api.route('/get-reitekis-by-musubicode/<musubi_code>', methods=['GET'])
 def get_reitekis_by_code(musubi_code):
-    reitekis = Reiteki.query.filter_by(musubi_code=musubi_code).all()
+    reitekis = User.query.filter_by(musubi_code=musubi_code).all()
     if not reitekis:
         return jsonify({'message': 'musubi code not valid'}), 406
     return jsonify({'reitekis': [r.to_dict() for r in reitekis]})
 
 
-@api.route('/get-update-reiteki-by-username/<reiteki_username>/', methods=['GET', 'PUT'])
-def get_update_reiteki_by_username(reiteki_username):
-    reiteki = Reiteki.query.filter_by(username=reiteki_username).first()
-    if not reiteki:
+@api.route('/get-update-user-by-username/<username>', methods=['GET', 'PUT'])
+def get_update_user_by_username(username):
+    user = User.query.filter_by(username=username).first()
+    if not user:
         return jsonify({'message': 'user not found'}), 404
     
     if request.method == 'GET':
-        return jsonify({'reiteki': reiteki.to_dict()})
+        return jsonify({'reiteki': user.to_dict()})
 
     elif request.method == 'PUT':
         data = request.get_json(force=True)
         print(data)
 
         if data.get('username'):
-            check_username = Reiteki.query.filter_by(username=data['username']).first()
+            check_username = User.query.filter_by(username=data['username']).first()
             if check_username:
                 return jsonify({'message': 'username already exists'}), 406
             else:
-                reiteki.username = data['username']
+                user.username = data['username']
         if data.get('disname'):
-            reiteki.disname = data['disname']
+            user.disname = data['disname']
         if data.get('profile'):
-            reiteki.profile = data['profile']
+            user.profile = data['profile']
         
         db.session.commit()
-        return jsonify({'message':'reiteki updated', 'reiteki': reiteki.to_dict()}), 201
+        return jsonify({'message':'user updated', 'user': user.to_dict()}), 201
 
 
 # Post
-@api.route('/create-post/', methods=['POST'])
+@api.route('/create-post', methods=['POST'])
 def create_post():
     data = request.get_json(force=True)
     new_post = Post(**data)
@@ -322,13 +392,13 @@ def create_post():
     return jsonify(new_post.to_dict()), 201
 
 
-@api.route('/get-all-posts/', methods=['GET'])
+@api.route('/get-all-posts', methods=['GET'])
 def get_all_posts():
     posts = Post.query.all()
     return jsonify({'posts': [p.to_dict() for p in posts]})
 
 
-@api.route('/get-all-public-posts/', methods=['GET'])
+@api.route('/get-all-public-posts', methods=['GET'])
 def get_all_pubicl_posts():
     posts = Post.query.all()
     posts_list = []
@@ -338,23 +408,23 @@ def get_all_pubicl_posts():
     return jsonify({'posts': [p.to_dict() for p in posts_list]})
 
 
-@api.route('/get-posts-by-reiteki/<int:reiteki_id>/', methods=['GET'])
-def get_posts_by_reiteki(reiteki_id):
-    reiteki = Reiteki.query.get(reiteki_id)
-    if not reiteki:
+@api.route('/get-posts-by-user/<int:user_id>', methods=['GET'])
+def get_posts_by_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
         return jsonify({'message': 'user not found'}), 404
-    return jsonify({'posts': reiteki.get_all_posts()})
+    return jsonify({'posts': user.get_all_posts()})
 
 
-@api.route('/get-posts-by-username/<reiteki_username>/', methods=['GET'])
-def get_posts_by_username(reiteki_username):
-    reiteki = Reiteki.query.filter_by(username=reiteki_username).first()
-    if not reiteki:
+@api.route('/get-posts-by-username/<username>', methods=['GET'])
+def get_posts_by_username(username):
+    user = User.query.filter_by(username=username).first()
+    if not user:
         return jsonify({'message': 'user not found'}), 404
-    return jsonify({'posts': reiteki.get_all_posts()})
+    return jsonify({'posts': user.get_all_posts()})
 
 
-@api.route('/get-update-post/<int:post_id>/', methods=['GET', 'PUT'])
+@api.route('/get-update-post/<int:post_id>', methods=['GET', 'PUT'])
 def get_update_post(post_id):
     post = Post.query.get(post_id)
     if not post:
@@ -370,7 +440,7 @@ def get_update_post(post_id):
         return jsonify({'message':'post content updated', 'post': post.to_dict()}), 201
 
 
-@api.route('/update-post-visibility/<int:post_id>/', methods=['PUT'])
+@api.route('/update-post-visibility/<int:post_id>', methods=['PUT'])
 def update_post_visibility(post_id):
     post = Post.query.get(post_id)
     if not post:
@@ -383,7 +453,7 @@ def update_post_visibility(post_id):
     return jsonify({'message':'post visibility updated', 'post': post.to_dict()}), 201
 
 
-@api.route('/delete-post/<int:post_id>/', methods=['DELETE'])
+@api.route('/delete-post/<int:post_id>', methods=['DELETE'])
 def delete_post(post_id):
     post = Post.query.get(post_id)
     if not post:
@@ -394,7 +464,7 @@ def delete_post(post_id):
 
 
 # Bubble jar
-@api.route('/create-bubblejar/', methods=['POST'])
+@api.route('/create-bubblejar', methods=['POST'])
 def create_bubblejar():
     data = request.get_json(force=True)
     new_bubblejar = BubbleJar(**data)
@@ -403,29 +473,39 @@ def create_bubblejar():
     return jsonify(new_bubblejar.to_dict()), 201
 
 
-@api.route('/get-all-bubblejars/', methods=['GET'])
+@api.route('/get-all-bubblejars', methods=['GET'])
 def get_all_bubblejars():
     bubblejars = BubbleJar.query.all()
     return jsonify({'bubblejars': [b.to_dict() for b in bubblejars]})
 
 
-@api.route('/get-bubblejars-by-reiteki/<int:reiteki_id>/', methods=['GET'])
-def get_bubblejars_by_reiteki(reiteki_id):
-    reiteki = Reiteki.query.get(reiteki_id)
-    if not reiteki:
+@api.route('/get-all-public-bubblejars', methods=['GET'])
+def get_all_pubicl_bubblejars():
+    bubblejars = BubbleJar.query.all()
+    bubblejars_list = []
+    for b in bubblejars:
+        if b.is_public == True:
+            bubblejars_list.append(b)
+    return jsonify({'bubblejars': [b.to_dict() for b in bubblejars_list]})
+
+
+@api.route('/get-bubblejars-by-user/<int:user_id>', methods=['GET'])
+def get_bubblejars_by_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
         return jsonify({'message': 'user not found'}), 404
-    return jsonify({'bubblejars': reiteki.get_all_bubblejars()})
+    return jsonify({'bubblejars': user.get_all_bubblejars()})
 
 
-@api.route('/get-bubblejars-by-username/<reiteki_username>/', methods=['GET'])
-def get_bubblejars_by_username(reiteki_username):
-    reiteki = Reiteki.query.filter_by(username=reiteki_username).first()
-    if not reiteki:
+@api.route('/get-bubblejars-by-username/<username>', methods=['GET'])
+def get_bubblejars_by_username(username):
+    user = User.query.filter_by(username=username).first()
+    if not user:
         return jsonify({'message': 'user not found'}), 404
-    return jsonify({'bubblejars': reiteki.get_all_bubblejars()})
+    return jsonify({'bubblejars': user.get_all_bubblejars()})
 
 
-@api.route('/get-update-bubblejar/<int:bubblejar_id>/', methods=['GET', 'PUT'])
+@api.route('/get-update-bubblejar/<int:bubblejar_id>', methods=['GET', 'PUT'])
 def get_update_bubblejar(bubblejar_id):
     bubblejar= BubbleJar.query.get(bubblejar_id)
     if not bubblejar:
@@ -445,7 +525,7 @@ def get_update_bubblejar(bubblejar_id):
         return jsonify({'message':'bubblejar updated', 'bubblejar': bubblejar.to_dict()}), 201
 
 
-@api.route('/update-bubblejar-visibility/<int:bubblejar_id>/', methods=['PUT'])
+@api.route('/update-bubblejar-visibility/<int:bubblejar_id>', methods=['PUT'])
 def update_bubblejar_visibility(bubblejar_id):
     bubblejar = BubbleJar.query.get(bubblejar_id)
     if not bubblejar:
@@ -458,7 +538,7 @@ def update_bubblejar_visibility(bubblejar_id):
     return jsonify({'message':'bubblejar visibility updated', 'bubblejar': bubblejar.to_dict()}), 201
 
 
-@api.route('/delete-bubblejar/<int:bubblejar_id>/', methods=['DELETE'])
+@api.route('/delete-bubblejar/<int:bubblejar_id>', methods=['DELETE'])
 def delete_bubblejar(bubblejar_id):
     bubblejar = BubbleJar.query.get(bubblejar_id)
     if not bubblejar:
@@ -474,7 +554,7 @@ def delete_bubblejar(bubblejar_id):
 
 
 # Bubble
-@api.route('/create-bubble/', methods=['POST'])
+@api.route('/create-bubble', methods=['POST'])
 def create_bubble():
     data = request.get_json(force=True)
     new_bubble = Bubble(**data)
@@ -483,29 +563,39 @@ def create_bubble():
     return jsonify(new_bubble.to_dict()), 201
 
 
-@api.route('/get-all-bubbles/', methods=['GET'])
+@api.route('/get-all-bubbles', methods=['GET'])
 def get_all_bubbles():
     bubbles = Bubble.query.all()
     return jsonify({'bubbles': [b.to_dict() for b in bubbles]})
 
 
-@api.route('/get-bubbles-by-reiteki/<int:reiteki_id>/', methods=['GET'])
-def get_bubbles_by_reiteki(reiteki_id):
-    reiteki = Reiteki.query.get(reiteki_id)
-    if not reiteki:
+@api.route('/get-all-public-bubbles', methods=['GET'])
+def get_all_pubicl_bubbles():
+    bubbles = Bubble.query.all()
+    bubbles_list = []
+    for b in bubbles:
+        if b.is_public == True:
+            bubbles_list.append(b)
+    return jsonify({'bubblejars': [b.to_dict() for b in bubbles_list]})
+
+
+@api.route('/get-bubbles-by-user/<int:user_id>', methods=['GET'])
+def get_bubbles_by_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
         return jsonify({'message': 'user not found'}), 404
-    return jsonify({'bubbles': reiteki.get_all_bubbles()})
+    return jsonify({'bubbles': user.get_all_bubbles()})
 
 
-@api.route('/get-bubbles-by-username/<reiteki_username>/', methods=['GET'])
-def get_bubbles_by_username(reiteki_username):
-    reiteki = Reiteki.query.filter_by(username=reiteki_username).first()
-    if not reiteki:
+@api.route('/get-bubbles-by-username/<username>', methods=['GET'])
+def get_bubbles_by_username(username):
+    user = User.query.filter_by(username=username).first()
+    if not user:
         return jsonify({'message': 'user not found'}), 404
-    return jsonify({'bubbles': reiteki.get_all_bubbles()})
+    return jsonify({'bubbles': user.get_all_bubbles()})
 
 
-@api.route('/get-bubbles-by-jar/<int:jar_id>/', methods=['GET'])
+@api.route('/get-bubbles-by-jar/<int:jar_id>', methods=['GET'])
 def get_bubbles_by_jar(jar_id):
     jar = BubbleJar.query.get(jar_id)
     if not jar:
@@ -513,7 +603,7 @@ def get_bubbles_by_jar(jar_id):
     return jsonify({'bubbles': jar.get_all_bubbles()})
 
 
-@api.route('/get-update-bubble/<int:bubble_id>/', methods=['GET', 'PUT'])
+@api.route('/get-update-bubble/<int:bubble_id>', methods=['GET', 'PUT'])
 def get_update_bubble(bubble_id):
     bubble= Bubble.query.get(bubble_id)
     if not bubble:
@@ -533,7 +623,7 @@ def get_update_bubble(bubble_id):
         return jsonify({'message':'bubble updated', 'bubble': bubble.to_dict()}), 201
 
 
-@api.route('/update-bubble-visibility/<int:bubble_id>/', methods=['PUT'])
+@api.route('/update-bubble-visibility/<int:bubble_id>', methods=['PUT'])
 def update_bubble_visibility(bubble_id):
     bubble = Bubble.query.get(bubble_id)
     if not bubble:
@@ -546,7 +636,7 @@ def update_bubble_visibility(bubble_id):
     return jsonify({'message':'bubble visibility updated', 'bubble': bubble.to_dict()}), 201
 
 
-@api.route('/delete-bubble/<int:bubble_id>/', methods=['DELETE'])
+@api.route('/delete-bubble/<int:bubble_id>', methods=['DELETE'])
 def delete_bubble(bubble_id):
     bubble = Bubble.query.get(bubble_id)
     if not bubble:
@@ -555,32 +645,4 @@ def delete_bubble(bubble_id):
     db.session.delete(bubble)
     db.session.commit()
     return jsonify({'message': 'bubble deleted'}), 201
-
-
-# @api.route('/musubialphas/', methods=['GET'])
-# def get_musubialphas():
-#     """This function is used to get all users that stored in local database
-
-#     Args:
-#         current_user (String): the uid of current user
-
-#     Returns:
-#         JSON: All users' info in database
-#     """
-#     musubialphas = MusubiAlpha.query.all()
-#     return jsonify({'musubialphas': [m.to_dict() for m in musubialphas]})
-
-
-# @api.route('/musubibetas/', methods=['GET'])
-# def get_musubibetas():
-#     """This function is used to get all users that stored in local database
-
-#     Args:
-#         current_user (String): the uid of current user
-
-#     Returns:
-#         JSON: All users' info in database
-#     """
-#     musubibetas = MusubiBeta.query.all()
-#     return jsonify({'musubibetas': [m.to_dict() for m in musubibetas]})
 

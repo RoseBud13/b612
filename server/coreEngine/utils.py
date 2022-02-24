@@ -6,7 +6,7 @@ Copyright © 2021 Xiong, Kaijie. All rights reserved.
 """
 
 import random, string
-from .models import db, Musubi, Reiteki
+from .models import db, Musubi, User
 
 
 class Tools():
@@ -24,7 +24,7 @@ class Tools():
 
 class DataHandler():
     def get_paired_reiteki(code):
-        reiteki_list = Reiteki.query.filter_by(musubi_code=code).all()
+        reiteki_list = User.query.filter_by(musubi_code=code).all()
         print(reiteki_list)
 
         if not reiteki_list:
