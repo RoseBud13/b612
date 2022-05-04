@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     handleLanding () {
-      const appRect = document.querySelector('#app').getBoundingClientRect()
+      const appRect = document.querySelector('#mobile').getBoundingClientRect()
       const elRect = this.$el.getBoundingClientRect()
       const continent = this.continent
       const rect = {}
@@ -107,13 +107,13 @@ export default {
 }
 .continent_icon {
   display: flex;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border: 0;
   border-radius: 100%;
   justify-content: center;
   align-items: center;
-  font-size: 35px;
+  font-size: 1.5em;
 }
 .continent_title {
   font-size: 32px;
@@ -125,7 +125,7 @@ export default {
   display: flex;
 }
 .spots-item p {
-  font-size: 21px;
+  font-size: 1em;
   padding: 10px;
 }
 .spots-item

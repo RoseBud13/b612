@@ -67,13 +67,13 @@ export default {
     left: 0;
     height: 100vh;
     width: 100vw;
-    z-index: -1;
+    /* z-index: -1; */
     text-align: center;
     overflow: hidden;
 }
 
 .noite {
-    background: -webkit-linear-gradient(top, rgb(0, 18, 51) 50%, rgb(25, 19, 39)80%, rgb(0, 24, 69));
+    background: -webkit-linear-gradient(top, rgb(0, 18, 51) 50%, rgb(25, 19, 39) 80%, rgb(0, 24, 69));
     width: 100%;
     height: 100%;
     position: absolute;

@@ -2,7 +2,7 @@
   <div class="planet">
     <div class="planet-container">
       <div class="planet-horizon">
-        <img src="../assets/prince.png" alt="">
+        <img src="../assets/img/prince.png" alt="">
       </div>
       <continent
           :continent="continent"
@@ -37,8 +37,8 @@ export default {
 .planet-container {
     position: absolute;
     top: 80%;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
 }
 .planet-horizon {
     height: 35px;

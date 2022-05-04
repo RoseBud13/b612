@@ -66,6 +66,7 @@ export default {
   background-color: white;
   color: #666;
   will-change: top, left, width, height;
+  z-index: 9;
 
   .continent {
     margin: 0;
