@@ -61,6 +61,7 @@ export default {
     height: 50px;
     text-align: center;
     font-size: 20px;
+    pointer-events: none;
     // animation: bounce-down 1.6s linear infinite;
 }
 .arrow p {
