@@ -1,0 +1,104 @@
+<template>
+    <div class="nav-bar">
+        <div class="nav-bar-container">
+            <div class="nav-bar-left">
+                <port @goTo="toHome"></port>
+            </div>
+            <div class="nav-bar-mid">
+                <div class="clock-box" @click="toggleDashboard(this.dashboard)">
+                    <clock :blink="true" :displaySeconds="false" :twelveHour="true"></clock>
+                </div>
+            </div>
+            <div class="nav-bar-right">
+                <div class="toggle-box" @click="toggleUniverseTheme(this.icon)">
+                    <i :class="['fas', `fa-${icon}`]"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import { mapMutations } from 'vuex';
+import Port from './Port.vue';
+import Clock from './Clock.vue';
+
+export default {
+    components: {
+        Port,
+        Clock
+    },
+    data() {
+        return {
+            icon: this.$store.state.universeThemeIcon,
+            dashboard: this.$store.state.isDashboard
+        }
+    },
+    methods: {
+        ...mapMutations(['toggleUniverseTheme', 'toggleDashboard']),
+
+        toHome() {
+            this.$router.push({name: "home"})
+        },
+    },
+    watch: {
+        '$store.state.universeThemeIcon'(newVal, oldVal) {
+            this.icon = newVal
+            // console.log(this.icon)
+        },
+        '$store.state.isDashboard'(newVal, oldVal) {
+            this.dashboard = newVal
+            // console.log(this.dashboard)
+        },
+    }
+}
+</script>
+
+<style lang="scss">
+.nav-bar {
+    z-index: 100;
+}
+.nav-bar-container {
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.1);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.nav-bar-left {
+    flex: 1;
+    align-self: center;
+}
+.nav-bar-mid {
+    flex: 2;
+    align-self: center;
+}
+.nav-bar-right {
+    flex: 1;
+    align-self: center;
+}
+.nav-bar-right .toggle-box {
+    background: rgba(255, 255, 255, 0.5);
+    color: #000;
+    width: 40px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    margin: 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: auto;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
+}
+.nav-bar-right .toggle-box:hover{
+    background: #e1e1e1;
+}
+</style>

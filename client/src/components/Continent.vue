@@ -90,6 +90,7 @@ export default {
     height: 100%;
     width: 100%;
     border: 0;
+    z-index: 9;
 }
 .continent_head {
   display: flex;

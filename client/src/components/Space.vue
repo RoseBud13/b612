@@ -1,19 +1,23 @@
 <template>
     <div class="space">
-        <!-- https://codepen.io/interaminense/full/QyGbXL/ -->
+        <!-- based on https://codepen.io/interaminense/full/QyGbXL/ -->
         <div class="noite"></div>
         <div class="constelacao"></div>
         <div class="chuvaMeteoro"></div>
+        <div class="meteoro style1" ></div>
+        <div class="meteoro style2" ></div>
+        <div class="meteoro style3" ></div>
+        <div class="meteoro style4" ></div>
     </div>
 </template>
 
 <script>
 export default {
     mounted() {
-        this.init()
+        this.initStars()
     },
     methods: {
-        init(){
+        initStars() {
             //estrelas
             var style = ["style1", "style2", "style3", "style4", "style4", "style4"];
             var tam = ["tam1", "tam1", "tam1", "tam2", "tam3"];
@@ -36,24 +40,6 @@ export default {
             }
 
             noite.innerHTML = estrela;
-
-            //meteoros
-            var numeroAleatorio = 2000;
-
-            setTimeout(function(){
-                carregarMeteoro();
-            }, numeroAleatorio);
-
-            function carregarMeteoro(){
-                setTimeout(carregarMeteoro, numeroAleatorio);
-                numeroAleatorio = getRandomArbitrary(1000, 3000);
-                var meteoro = "<div class='meteoro "+ style[getRandomArbitrary(0, 4)] +"'></div>";
-                document.getElementsByClassName('chuvaMeteoro')[0].innerHTML = meteoro;
-                setTimeout(function(){
-                    document.getElementsByClassName('chuvaMeteoro')[0].innerHTML = "";
-                }, 1000);
-            }
-
         }
     }
 }
@@ -67,7 +53,7 @@ export default {
     left: 0;
     height: 100vh;
     width: 100vw;
-    /* z-index: -1; */
+    z-index: -1;
     text-align: center;
     overflow: hidden;
 }
@@ -139,10 +125,10 @@ export default {
     top: 0;
 }
 
-.meteoro.style1 { animation-name: meteoroStyle1; }
-.meteoro.style2 { animation-name: meteoroStyle2; }
-.meteoro.style3 { animation-name: meteoroStyle3; }
-.meteoro.style4 { animation-name: meteoroStyle4; }
+.meteoro.style1 { animation-name: meteoroStyle1; animation-duration: 22s; }
+.meteoro.style2 { animation-name: meteoroStyle2; animation-duration: 13s; }
+.meteoro.style3 { animation-name: meteoroStyle3; animation-duration: 7s; }
+.meteoro.style4 { animation-name: meteoroStyle4; animation-duration: 5s; }
 
 
 @keyframes escurecer {
@@ -182,31 +168,27 @@ export default {
 }
 
 @keyframes meteoroStyle1 {
-    0% { opacity: 0; right: 300px; top: 100px; }
-    30% { opacity: .3; }
-    60% { opacity: .3; }
+    0%, 97% { opacity: 0; right: 300px; top: 100px;} 
+    98% { opacity: .3; right: 300px; top: 100px; }
     100% { opacity: 0; right: 1000px; top: 600px; }
 }
 
 @keyframes meteoroStyle2 {
-    0% { opacity: 0; right: 700px; top: 100px; }
-    30% { opacity: 1; }
-    60% { opacity: 1; }
+    0%, 93% { opacity: 0; right: 700px; top: 100px; }
+    94% { opacity: .7; right: 700px; top: 100px; }
     100% { opacity: 0; right: 1400px; top: 600px; }
 }
 
 @keyframes meteoroStyle3 {
-    0% { opacity: 0; right: 300px; top: 300px; }
-    30% { opacity: 1; }
-    60% { opacity: 1; }
+    0%, 85% { opacity: 0; right: 300px; top: 300px; }
+    86% { opacity: .9; right: 300px; top: 300px; }
     100% { opacity: 0; right: 1000px; top: 800px; }
 }
 
 @keyframes meteoroStyle4 {
-    0% { opacity: 0; right: 700px; top: 300px; }
-    30% { opacity: 1; }
-    60% { opacity: 1; }
-  100% { opacity: 0; right: 1400px; top: 800px; }
+    0%, 82% { opacity: 0; right: 700px; top: 300px; }
+    83% { opacity: 1; right: 700px; top: 300px; }
+    100% { opacity: 0; right: 1400px; top: 800px; }
 }
 
 @keyframes rotate {

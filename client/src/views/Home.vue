@@ -1,5 +1,6 @@
 <template>
     <div class="home">
+        <port @goTo="toUniverse"></port>
         <space></space>
         <div id="mobile">
             <planet></planet>
@@ -16,12 +17,20 @@
 import Space from '../components/Space.vue'
 import Planet from '../components/Planet.vue'
 import ContinentDetail from '../components/ContinentDetail.vue'
+import Port from '../components/Port.vue'
 
 export default {
     components: {
         Space,
         Planet,
-        ContinentDetail
+        ContinentDetail,
+        Port
+    },
+    methods: {
+        toUniverse() {
+            // console.log('clicked')
+            this.$router.push({name: "universe"})
+        },
     }
 }
 
@@ -32,7 +41,7 @@ export default {
     width: 100vw;
     height: 100vh;
     position: relative;
-    background: -webkit-linear-gradient(top, rgb(0, 18, 51) 50%, rgb(25, 19, 39) 80%, rgb(0, 24, 69));
+    // background: -webkit-linear-gradient(top, rgb(0, 18, 51) 50%, rgb(25, 19, 39) 80%, rgb(0, 24, 69));
 }
 #mobile {
     position: absolute;
@@ -76,11 +85,12 @@ export default {
         min-height: 100vh;
         border-radius: 0;
     }
-}
-@media (max-width: 480px) {
     .arrow {
         display: none;
     }
+    // .port {
+    //     display: none;
+    // }
 }
 // @keyframes bounce-down {
 //         25% {

@@ -45,6 +45,10 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
+a:hover, a:visited, a:link, a:active {
+    text-decoration: none;
+    color: inherit;
+}
 #app {
   height: 100%;
   overflow: hidden;

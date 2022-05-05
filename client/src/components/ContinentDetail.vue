@@ -1,7 +1,7 @@
 <template>
   <transition name="show" @enter="handleEnter" @leave="handleLeave">
     <div class="continent-detail" v-if="landed">
-      <app-bar @left="departuredCon" />
+      <app-bar @left="departuredCon" @right="toUniverse" />
       <continent :continent="landed.continent" />
     </div>
   </transition>
@@ -21,6 +21,7 @@ export default {
   },
   methods: {
     ...mapMutations(['departuredCon']),
+
     handleEnter (el) {
       Object.assign(el.style, {
         top: `${this.landed.rect.top}px`,
@@ -37,6 +38,7 @@ export default {
         })
       }, 0)
     },
+
     handleLeave (el) {
       Object.assign(el.style, {
         top: 0,
@@ -52,7 +54,13 @@ export default {
           height: `${this.departured.rect.height}px`
         })
       }, 0)
-    }
+    },
+
+    toUniverse() {
+      // console.log('clicked')
+      this.$router.push({name: "universe"}),
+      this.departuredCon()
+    },
   }
 }
 </script>

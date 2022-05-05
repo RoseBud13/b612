@@ -31,6 +31,9 @@ export default createStore({
         },
         landed: null,
         departured: null,
+        universeThemeIcon: 'sun',
+        universeTheme: 'dark',
+        isDashboard: null
     },
     mutations: {
         landedCon (state, landed) {
@@ -41,6 +44,22 @@ export default createStore({
             state.departured = state.landed
             state.landed = null
         },
+        toggleUniverseTheme (state, icon) {
+            if (icon === 'sun') {
+                state.universeThemeIcon = 'moon'
+                state.universeTheme = 'light'
+            } else {
+                state.universeThemeIcon = 'sun'
+                state.universeTheme = 'dark'
+            }
+        },
+        toggleDashboard (state, dasboardStatus) {
+            if (dasboardStatus === 'dashboard') {
+                state.isDashboard = null
+            } else {
+                state.isDashboard = 'dashboard'
+            }
+        }
     },
     actions: {},
     modules: {}
