@@ -1,7 +1,7 @@
 <template>
   <transition name="show" @enter="handleEnter" @leave="handleLeave">
     <div class="continent-detail" v-if="landed">
-      <app-bar @left="departuredCon" @right="toUniverse" />
+      <app-bar @left="departuredCon" @right="toHome" />
       <continent :continent="landed.continent" />
     </div>
   </transition>
@@ -56,9 +56,9 @@ export default {
       }, 0)
     },
 
-    toUniverse() {
+    toHome() {
       // console.log('clicked')
-      this.$router.push({name: "universe"}),
+      this.$router.push({name: "home"}),
       this.departuredCon()
     },
   }

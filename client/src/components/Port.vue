@@ -1,7 +1,8 @@
 <template>
     <div class="port">
         <div class="port-btn" @click="$emit('goTo')" v-show="this.$route.meta.showPort || this.show === 'show' ">
-            <ion-icon name="planet-outline"></ion-icon>
+            <!-- <ion-icon name="planet-outline"></ion-icon> -->
+            <img src="../assets/img/planet-outline.svg" alt="planet">
         </div>
     </div>
 </template>
@@ -44,10 +45,13 @@ export default {
     line-height: 35px;
     text-align: center;
     margin: 10px 15px;
-    font-size: 20px;
+    font-size: 15px;
     border-radius: 5px;
     cursor: pointer;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
+}
+.port-btn img {
+    width: 19px;
 }
 .port-btn:hover {
     background: #e1e1e1;

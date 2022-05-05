@@ -31,8 +31,8 @@ export default createStore({
         },
         landed: null,
         departured: null,
-        universeThemeIcon: 'sun',
-        universeTheme: 'dark',
+        homeThemeIcon: 'sun',
+        homeTheme: 'dark',
         isDashboard: null
     },
     mutations: {
@@ -44,13 +44,13 @@ export default createStore({
             state.departured = state.landed
             state.landed = null
         },
-        toggleUniverseTheme (state, icon) {
+        toggleHomeTheme (state, icon) {
             if (icon === 'sun') {
-                state.universeThemeIcon = 'moon'
-                state.universeTheme = 'light'
+                state.homeThemeIcon = 'moon'
+                state.homeTheme = 'light'
             } else {
-                state.universeThemeIcon = 'sun'
-                state.universeTheme = 'dark'
+                state.homeThemeIcon = 'sun'
+                state.homeTheme = 'dark'
             }
         },
         toggleDashboard (state, dasboardStatus) {

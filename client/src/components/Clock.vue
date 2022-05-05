@@ -52,7 +52,7 @@ export default {
     data() {
         return {
             ticker: null,
-            theme: this.$store.state.universeTheme,
+            theme: this.$store.state.homeTheme,
             minutes: getMinutes(),
             hours: getHour(this.twelveHour),
             seconds: getSeconds(),
@@ -76,9 +76,9 @@ export default {
         clearInterval(this.ticker)
     },
     watch: {
-        '$store.state.universeTheme'(newVal, oldVal) {
+        '$store.state.homeTheme'(newVal, oldVal) {
             this.theme = newVal
-            console.log(this.theme)
+            // console.log(this.theme)
         },
     }
 }

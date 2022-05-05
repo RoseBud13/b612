@@ -8,21 +8,27 @@
             <div class="sun-box">
                 <div class="sun"></div>
             </div>
-            <div class="sea"></div>
+            <!-- <div class="sea"></div> -->
+            <sea class="sea"></sea>
         </div>
     </div>
 </template>
 
 <script>
+import Sea from "./Sea.vue"
+
 export default {
+    components: {
+        Sea
+    },
     data() {
         return {
-            theme: this.$store.state.universeTheme,
+            theme: this.$store.state.homeTheme,
             isDashboard: this.$store.state.isDashboard
         }
     },
     watch: {
-        '$store.state.universeTheme'(newVal, oldVal) {
+        '$store.state.homeTheme'(newVal, oldVal) {
             this.theme = newVal
             // console.log(this.theme)
         },
@@ -73,16 +79,6 @@ export default {
     /* 通过阴影绘制月亮 */
     box-shadow: 160px 180px 0 cyan;
     border-radius: 50%;
-}
-.sea{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 35%;
-    /* 背景模糊制造大海的感觉 */
-    backdrop-filter: blur(100px);
-    -webkit-backdrop-filter: blur(100px);
-    // z-index: 7;
 }
 
 /* 动画 */

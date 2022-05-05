@@ -2,7 +2,7 @@
     <div class="nav-bar">
         <div class="nav-bar-container">
             <div class="nav-bar-left">
-                <port @goTo="toHome"></port>
+                <port @goTo="toUniverse"></port>
             </div>
             <div class="nav-bar-mid">
                 <div class="clock-box" @click="toggleDashboard(this.dashboard)">
@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="nav-bar-right">
-                <div class="toggle-box" @click="toggleUniverseTheme(this.icon)">
+                <div class="toggle-box" @click="toggleHomeTheme(this.icon)">
                     <i :class="['fas', `fa-${icon}`]"></i>
                 </div>
             </div>
@@ -30,19 +30,19 @@ export default {
     },
     data() {
         return {
-            icon: this.$store.state.universeThemeIcon,
+            icon: this.$store.state.homeThemeIcon,
             dashboard: this.$store.state.isDashboard
         }
     },
     methods: {
-        ...mapMutations(['toggleUniverseTheme', 'toggleDashboard']),
+        ...mapMutations(['toggleHomeTheme', 'toggleDashboard']),
 
-        toHome() {
-            this.$router.push({name: "home"})
+        toUniverse() {
+            this.$router.push({name: "universe"})
         },
     },
     watch: {
-        '$store.state.universeThemeIcon'(newVal, oldVal) {
+        '$store.state.homeThemeIcon'(newVal, oldVal) {
             this.icon = newVal
             // console.log(this.icon)
         },
@@ -66,7 +66,7 @@ export default {
     background-color: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(100px);
     -webkit-backdrop-filter: blur(100px);
-    box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
 
     display: flex;
     align-items: center;
@@ -96,7 +96,7 @@ export default {
     border-radius: 5px;
     cursor: pointer;
     margin-left: auto;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
 }
 .nav-bar-right .toggle-box:hover{
     background: #e1e1e1;
