@@ -38,7 +38,9 @@ export default {
                     // console.log(this.disY)
                     //向下滑实行函数someAction1，向上滑实行函数someAction2
                     if (this.disY < 0) {
-                        this.toggleDashboard(this.isDashboard)
+                        if (this.isDashboard === false) {
+                            this.toggleDashboard(this.isDashboard)
+                        }
                     }
                 }
             }
