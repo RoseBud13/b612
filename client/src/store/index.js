@@ -33,7 +33,7 @@ export default createStore({
         departured: null,
         homeThemeIcon: 'sun',
         homeTheme: 'dark',
-        isDashboard: null
+        showDashboard: false
     },
     mutations: {
         landedCon (state, landed) {
@@ -54,10 +54,10 @@ export default createStore({
             }
         },
         toggleDashboard (state, dasboardStatus) {
-            if (dasboardStatus === 'dashboard') {
-                state.isDashboard = null
+            if (dasboardStatus === false) {
+                state.showDashboard = true
             } else {
-                state.isDashboard = 'dashboard'
+                state.showDashboard = false
             }
         }
     },

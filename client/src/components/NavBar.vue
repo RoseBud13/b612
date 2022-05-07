@@ -31,7 +31,7 @@ export default {
     data() {
         return {
             icon: this.$store.state.homeThemeIcon,
-            dashboard: this.$store.state.isDashboard,
+            dashboard: this.$store.state.showDashboard,
             theme: this.$store.state.homeTheme
         }
     },
@@ -47,7 +47,7 @@ export default {
             this.icon = newVal
             // console.log(this.icon)
         },
-        '$store.state.isDashboard'(newVal, oldVal) {
+        '$store.state.showDashboard'(newVal, oldVal) {
             this.dashboard = newVal
             // console.log(this.dashboard)
         },

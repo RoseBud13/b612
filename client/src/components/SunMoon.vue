@@ -1,6 +1,6 @@
 <template>
     <div class="sun-moon">
-        <div id="sun-moon-container" :class="[theme, isDashboard]">
+        <div id="sun-moon-container" :class="[theme]">
             <div class="bg"></div>
             <div class="moon-box">
                 <div class="moon"></div>
@@ -23,19 +23,14 @@ export default {
     },
     data() {
         return {
-            theme: this.$store.state.homeTheme,
-            isDashboard: this.$store.state.isDashboard
+            theme: this.$store.state.homeTheme
         }
     },
     watch: {
         '$store.state.homeTheme'(newVal, oldVal) {
             this.theme = newVal
             // console.log(this.theme)
-        },
-        '$store.state.isDashboard'(newVal, oldVal) {
-            this.isDashboard = newVal
-            // console.log(this.isDashboard)
-        },
+        }
     }
 }
 </script>
@@ -97,9 +92,6 @@ export default {
     /* 添加动画过渡 */
     transition: all 1s ease-in-out;
 }
-.sea {
-    transition: all 1.2s ease-in-out;
-}
 
 .sun-box,
 .moon-box{
@@ -129,13 +121,6 @@ export default {
 }
 .dark .bg{
     background-color: #040720;
-}
-
-/* 工作区 */
-.dashboard .sea {
-    height: 100%;
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
 }
 
 @media (max-width: 1000px) {

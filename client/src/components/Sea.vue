@@ -1,5 +1,5 @@
 <template>
-    <div class="sea">
+    <div class="sea" :class="{ dashboard: isDashboard }">
 
     </div>
 </template>
@@ -13,7 +13,7 @@ export default {
             startY: 0, // 触摸位置
             endY: 0, // 结束位置
             disY: 0, // 移动距离
-            dashboard: this.$store.state.isDashboard
+            isDashboard: this.$store.state.showDashboard
         }
     },
     mounted () {
@@ -33,7 +33,7 @@ export default {
                     // console.log(this.disY)
                     //向下滑实行函数someAction1，向上滑实行函数someAction2
                     if (this.disY < 0) {
-                        this.toggleDashboard(this.dashboard)
+                        this.toggleDashboard(this.isDashboard)
                     }
                 }
             }
@@ -45,9 +45,9 @@ export default {
         ...mapMutations(['toggleDashboard']),
     },
     watch: {
-        '$store.state.isDashboard'(newVal, oldVal) {
-            this.dashboard = newVal
-            // console.log(this.dashboard)
+        '$store.state.showDashboard'(newVal, oldVal) {
+            this.isDashboard = newVal
+            // console.log(this.isDashboard)
         },
     }
 }
@@ -63,10 +63,20 @@ export default {
     backdrop-filter: blur(100px);
     -webkit-backdrop-filter: blur(100px);
     // z-index: 7;
+
+    transition: all 1.2s ease-in-out;
 }
-@media (max-width: 480px) {
-    .sea {
-        height: 30%;
-    }
+
+/* Dashboard */
+.dashboard {
+    height: 100%;
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
 }
+
+// @media (max-width: 480px) {
+//     .sea {
+//         height: 30%;
+//     }
+// }
 </style>
