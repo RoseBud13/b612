@@ -66,7 +66,7 @@ export default {
 }
 @media (max-width: 480px) {
     .sea {
-        height: 35%;
+        height: 30%;
     }
 }
 </style>

@@ -58,11 +58,13 @@ export default {
     margin: 0;
     padding: 0;
     position: absolute;
-    top: 50%;
+    top: 55%;
     left: 50%;
     transform: translate(-50%,-50%);
-    width: 600px;
-    height: 600px;
+    // width: 600px;
+    // height: 600px;
+    width: 25vw;
+    height: 25vw;
     background-color: orange;
     border-radius: 50%;
 }
@@ -70,14 +72,19 @@ export default {
     margin: 0;
     padding: 0;
     position: absolute;
-    top: 50%;
+    // top: 50%;
     left: 50%;
+    top: 55%;
     /* 计算得出月亮的位置 */
-    transform: translate(calc(-50% + -160px), calc(-50% + -180px));
-    width: 600px;
-    height: 600px;
+    // transform: translate(calc(-50% + -160px), calc(-50% + -180px));
+    transform: translate(calc(-50% + -0.27*25vw), calc(-50% + -0.3*25vw));
+    // width: 600px;
+    // height: 600px;
+    width: 25vw;
+    height: 25vw;
     /* 通过阴影绘制月亮 */
-    box-shadow: 160px 180px 0 cyan;
+    // box-shadow: 160px 180px 0 cyan;
+    box-shadow: 0.27*25vw 0.3*25vw 0 cyan;
     border-radius: 50%;
 }
 
@@ -131,14 +138,14 @@ export default {
     -webkit-backdrop-filter: blur(40px);
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
     .sun {
-        top: 55%;
+        top: 60%;
         width: 60vw;
         height: 60vw;
     }
     .moon {
-        top: 55%;
+        top: 60%;
         width: 60vw;
         height: 60vw;
         transform: translate(calc(-50% + -0.27*60vw), calc(-50% + -0.3*60vw));

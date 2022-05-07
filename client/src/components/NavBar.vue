@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="nav-bar-right">
-                <div class="toggle-box" @click="toggleHomeTheme(this.icon)">
+                <div class="toggle-box" :class="[theme]" @click="toggleHomeTheme(this.icon)">
                     <i :class="['fas', `fa-${icon}`]"></i>
                 </div>
             </div>
@@ -31,7 +31,8 @@ export default {
     data() {
         return {
             icon: this.$store.state.homeThemeIcon,
-            dashboard: this.$store.state.isDashboard
+            dashboard: this.$store.state.isDashboard,
+            theme: this.$store.state.homeTheme
         }
     },
     methods: {
@@ -50,6 +51,10 @@ export default {
             this.dashboard = newVal
             // console.log(this.dashboard)
         },
+        '$store.state.homeTheme'(newVal, oldVal) {
+            this.theme = newVal
+            // console.log(this.theme)
+        }
     }
 }
 </script>
@@ -63,10 +68,10 @@ export default {
     top: 0;
     width: 100vw;
     height: 50px;
-    background-color: rgba(255, 255, 255, 0.6);
+    // background-color: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(100px);
     -webkit-backdrop-filter: blur(100px);
-    box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
+    // box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
 
     display: flex;
     align-items: center;
@@ -84,9 +89,9 @@ export default {
     flex: 1;
     align-self: center;
 }
-.nav-bar-right .toggle-box {
-    background: rgba(255, 255, 255, 0.5);
-    color: #000;
+.toggle-box {
+    // background: rgba(255, 255, 255, 0.5);
+    // color: #000;
     width: 40px;
     height: 30px;
     line-height: 30px;
@@ -96,9 +101,15 @@ export default {
     border-radius: 5px;
     cursor: pointer;
     margin-left: auto;
-    box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
+    // box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
 }
-.nav-bar-right .toggle-box:hover{
-    background: #e1e1e1;
+.toggle-box:hover{
+    background: #bbbaba;
+}
+.dark {
+    color: #daf6ff;
+}
+.light {
+    color: #23373d;
 }
 </style>

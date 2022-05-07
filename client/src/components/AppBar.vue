@@ -23,7 +23,7 @@ export default {
     },
     right: {
       type: String,
-      default: 'ellipsis-v'
+      default: 'ellipsis-h'
     }
   }
 }
