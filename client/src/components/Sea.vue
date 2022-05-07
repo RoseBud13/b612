@@ -1,19 +1,24 @@
 <template>
-    <div class="sea" :class="{ dashboard: isDashboard }">
-
+    <div class="sea" :class="[{ dashboardMode: isDashboard }, theme]">
+        <dashboard></dashboard>
     </div>
 </template>
 
 <script>
 import { mapMutations } from 'vuex';
+import Dashboard from "../components/Dashboard.vue"
 
 export default {
+    components: {
+        Dashboard
+    },
     data() {
         return {
             startY: 0, // 触摸位置
             endY: 0, // 结束位置
             disY: 0, // 移动距离
-            isDashboard: this.$store.state.showDashboard
+            isDashboard: this.$store.state.showDashboard,
+            theme: this.$store.state.homeTheme
         }
     },
     mounted () {
@@ -49,29 +54,39 @@ export default {
             this.isDashboard = newVal
             // console.log(this.isDashboard)
         },
+        '$store.state.homeTheme'(newVal, oldVal) {
+            this.theme = newVal
+            // console.log(this.theme)
+        },
     }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .sea{
     position: absolute;
     bottom: 0;
-    width: 100%;
-    height: 30%;
+    width: 100vw;
+    height: 30vh;
     /* 背景模糊制造大海的感觉 */
-    backdrop-filter: blur(100px);
-    -webkit-backdrop-filter: blur(100px);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
     // z-index: 7;
 
     transition: all 1.2s ease-in-out;
 }
 
+/** Theme with pic */
+.night {
+    height: 10vh;
+}
+.sunset {
+    height: 10vh;
+}
+
 /* Dashboard */
-.dashboard {
-    height: 100%;
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
+.dashboardMode {
+    height: 100vh;
 }
 
 // @media (max-width: 480px) {

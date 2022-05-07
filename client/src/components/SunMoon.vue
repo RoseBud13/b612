@@ -8,19 +8,12 @@
             <div class="sun-box">
                 <div class="sun"></div>
             </div>
-            <!-- <div class="sea"></div> -->
-            <sea class="sea"></sea>
         </div>
     </div>
 </template>
 
 <script>
-import Sea from "./Sea.vue"
-
 export default {
-    components: {
-        Sea
-    },
     data() {
         return {
             theme: this.$store.state.homeTheme
@@ -101,7 +94,7 @@ export default {
     overflow: hidden;
 }
 
-/* 白天 */
+/* Light */
 .light .sun-box{
     height: 100%;
 }
@@ -112,7 +105,7 @@ export default {
     background-color: #ffeea2;
 }
 
-/* 夜晚 */
+/* Dark */
 .dark .sun-box{
     height: 0;
 }
@@ -121,6 +114,34 @@ export default {
 }
 .dark .bg{
     background-color: #040720;
+}
+
+/* 日落 */
+.sunset .sun-box{
+    height: 0;
+}
+.sunset .moon-box{
+    height: 0;
+}
+.sunset .bg{
+    background-color: #ffeea2;
+    background-image: url(../assets/img/sunset.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+/* 夜晚 */
+.night .sun-box{
+    height: 0;
+}
+.night .moon-box{
+    height: 0;
+}
+.night .bg{
+    background-color: #040720;
+    background-image: url(../assets/img/night.jpg);
+    background-size: cover;
+    background-position: center;
 }
 
 @media (max-width: 1000px) {

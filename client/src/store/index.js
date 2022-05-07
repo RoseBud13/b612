@@ -32,8 +32,9 @@ export default createStore({
         landed: null,
         departured: null,
         homeThemeIcon: 'sun',
-        homeTheme: 'dark',
-        showDashboard: false
+        homeTheme: 'night',
+        showDashboard: false,
+        isHomeThemeWithPic: true
     },
     mutations: {
         landedCon (state, landed) {
@@ -46,11 +47,21 @@ export default createStore({
         },
         toggleHomeTheme (state, icon) {
             if (icon === 'sun') {
-                state.homeThemeIcon = 'moon'
-                state.homeTheme = 'light'
+                if (state.isHomeThemeWithPic === true) {
+                    state.homeThemeIcon = 'moon'
+                    state.homeTheme = 'sunset'
+                } else {
+                    state.homeThemeIcon = 'moon'
+                    state.homeTheme = 'light'
+                }
             } else {
-                state.homeThemeIcon = 'sun'
-                state.homeTheme = 'dark'
+                if (state.isHomeThemeWithPic === true) {
+                    state.homeThemeIcon = 'sun'
+                    state.homeTheme = 'night'
+                } else {
+                    state.homeThemeIcon = 'sun'
+                    state.homeTheme = 'dark'
+                }
             }
         },
         toggleDashboard (state, dasboardStatus) {
@@ -59,7 +70,25 @@ export default createStore({
             } else {
                 state.showDashboard = false
             }
+        },
+        toggleHomeThemeWithPic (state, homeThemeWithPic) {
+            if (homeThemeWithPic === true) {
+                state.isHomeThemeWithPic = false
+                if (state.homeTheme === 'night') {
+                    state.homeTheme = 'dark'
+                } else {
+                    state.homeTheme = 'light'
+                }
+            } else {
+                state.isHomeThemeWithPic = true
+                if (state.homeTheme === 'dark') {
+                    state.homeTheme = 'night'
+                } else {
+                    state.homeTheme = 'sunset'
+                }
+            }
         }
+
     },
     actions: {},
     modules: {}

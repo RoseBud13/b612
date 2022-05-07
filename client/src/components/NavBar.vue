@@ -6,10 +6,15 @@
             </div>
             <div class="nav-bar-mid">
                 <div class="clock-box" @click="toggleDashboard(this.dashboard)">
-                    <clock :blink="true" :displaySeconds="false" :twelveHour="true"></clock>
+                    <clock :blink="true" :displaySeconds="false" :twelveHour="false"></clock>
                 </div>
             </div>
             <div class="nav-bar-right">
+                <div class="toggle-box" :class="[theme]" @click="toggleHomeThemeWithPic(this.themeWithPic)">
+                    <i v-if="theme === 'light'" class="fas fa-image"></i>
+                    <i v-else-if="theme === 'dark'" class="fas fa-image"></i>
+                    <i v-else class="fas fa-shapes"></i>
+                </div>
                 <div class="toggle-box" :class="[theme]" @click="toggleHomeTheme(this.icon)">
                     <i :class="['fas', `fa-${icon}`]"></i>
                 </div>
@@ -32,11 +37,12 @@ export default {
         return {
             icon: this.$store.state.homeThemeIcon,
             dashboard: this.$store.state.showDashboard,
-            theme: this.$store.state.homeTheme
+            theme: this.$store.state.homeTheme,
+            themeWithPic: this.$store.state.isHomeThemeWithPic
         }
     },
     methods: {
-        ...mapMutations(['toggleHomeTheme', 'toggleDashboard']),
+        ...mapMutations(['toggleHomeTheme', 'toggleDashboard', 'toggleHomeThemeWithPic']),
 
         toUniverse() {
             this.$router.push({name: "universe"})
@@ -54,6 +60,11 @@ export default {
         '$store.state.homeTheme'(newVal, oldVal) {
             this.theme = newVal
             // console.log(this.theme)
+        },
+        '$store.state.isHomeThemeWithPic'(newVal, oldVal) {
+            this.themeWithPic = newVal
+            // console.log(this.themeWithPic)
+            // console.log(this.theme)
         }
     }
 }
@@ -61,16 +72,16 @@ export default {
 
 <style lang="scss">
 .nav-bar {
+    position: absolute;
+    top: 0;
     z-index: 100;
 }
 .nav-bar-container {
-    position: absolute;
-    top: 0;
     width: 100vw;
     height: 50px;
     // background-color: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(100px);
-    -webkit-backdrop-filter: blur(100px);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
     // box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
 
     display: flex;
@@ -88,6 +99,13 @@ export default {
 .nav-bar-right {
     flex: 1;
     align-self: center;
+    display: flex;
+    justify-content: flex-end;
+}
+.clock-box {
+    margin: auto;
+    width: 100%;
+    height: 30px;
 }
 .toggle-box {
     // background: rgba(255, 255, 255, 0.5);
@@ -100,7 +118,7 @@ export default {
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
-    margin-left: auto;
+    // margin-left: auto;
     // box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
 }
 .toggle-box:hover{
@@ -109,7 +127,13 @@ export default {
 .dark {
     color: #daf6ff;
 }
+.night {
+    color: #daf6ff;
+}
 .light {
     color: #23373d;
+}
+.sunset {
+    color: #daf6ff;
 }
 </style>
