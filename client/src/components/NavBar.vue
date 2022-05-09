@@ -124,16 +124,16 @@ export default {
 .toggle-box:hover{
     background: #bbbaba;
 }
-.dark {
+.dark .fas {
     color: #daf6ff;
 }
-.night {
+.night .fas {
     color: #daf6ff;
 }
-.light {
+.light .fas {
     color: #23373d;
 }
-.sunset {
+.sunset .fas {
     color: #daf6ff;
 }
 </style>

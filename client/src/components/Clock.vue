@@ -95,19 +95,19 @@ export default {
     font-size: 1.5em;
     letter-spacing: 0.2em;
 }
-.dark {
+.dark .time {
     color: #daf6ff;
     text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
 }
-.light {
+.light .time {
     color: #23373d;
     text-shadow: 0 0 20px #57656a, 0 0 20px rgba(10, 175, 230, 0);
 }
-.night {
+.night .time {
     color: #daf6ff;
     text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
 }
-.sunset {
+.sunset .time {
     color: #daf6ff;
     text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
 }
