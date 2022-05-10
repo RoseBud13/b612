@@ -145,7 +145,7 @@ export default {
     flex-direction: column;
 }
 .quote-text {
-    font-size: 18px;
+    font-size: 1em;
 }
 .quote-info {
     font-size: 10px;
