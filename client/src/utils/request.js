@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const oneApi = axios.create({
-    baseURL: 'http://v3.wufazhuce.com:8000/api',
+    baseURL: '/oneapi',
     timeout: 2000
 });
 

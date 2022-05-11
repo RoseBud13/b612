@@ -14,7 +14,7 @@
                 </div>
                 <div class="widgets">
                     <div class="card">
-                        <img :src="dailyPic" alt="daily_pic">
+                        <img :src="dailyPicUrl" alt="daily_pic">
                     </div>
                     <div class="card">
                         <iframe src="https://bubble-player-1306125602.cos-website.ap-shanghai.myqcloud.com" width="100%" height="200" style="border:none;"></iframe>
@@ -32,10 +32,17 @@
                     </div>
                      <div class="mini-card-wrapper">
                         <div class="mini-card"></div>
+                        <div class="mini-card"></div>
+                    </div>
+                    <div class="mini-card-wrapper">
+                        <div class="mini-card"></div>
                     </div>
                 </div>
             </div>
-            <div class="app-box"></div>
+            <div class="app-box">
+                <div class="app-window"></div>
+                <div class="apps"></div>
+            </div>
         </div>
     </div>
 </template>
@@ -59,7 +66,7 @@ export default defineComponent({
             quoteInfo: '',
             dateText: '',
             weatherText: '',
-            dailyPic: ''
+            dailyPicUrl: ''
         }
     },
     watch: {
@@ -79,8 +86,7 @@ export default defineComponent({
                 this.quoteInfo = '—— ' + res.data.data.content_list[0].words_info
                 this.dateText = res.data.data.weather.date.slice(0,4) + '年' + res.data.data.weather.date.slice(5,7) + '月' + res.data.data.weather.date.slice(8) + '日'
                 this.weatherText = res.data.data.weather.city_name + ' ' + '平流层 ' + ' 温度 ' + '-57.15°C'
-                this.dailyPic = res.data.data.content_list[0].img_url
-                // console.log(res.data)
+                this.dailyPicUrl = 'https://b612.one/daily/img/' + res.data.data.content_list[0].img_url.slice(27)
                 console.log(this.dailyQuote)
             }).catch(e => {
                 console.log(e)
@@ -130,6 +136,12 @@ export default defineComponent({
 }
 .app-box {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    // * {
+    //     // border: 1px solid black;
+    //     background-color: #eee;
+    // }
 }
 .daily-update {
     background-color: rgba(255, 255, 255, 0);
