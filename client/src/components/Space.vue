@@ -12,7 +12,9 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
     mounted() {
         this.initStars()
     },
@@ -42,7 +44,7 @@ export default {
             noite.innerHTML = estrela;
         }
     }
-}
+})
 </script>
 
 <style>

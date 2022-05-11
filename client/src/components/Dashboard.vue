@@ -41,11 +41,12 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import { getOneQuote } from "../api"
 import LittleFox from "../components/LittleFox.vue"
 import MiniSlider from "../components/MiniSlider.vue"
 
-export default {
+export default defineComponent({
     components: {
         LittleFox,
         MiniSlider
@@ -95,7 +96,7 @@ export default {
         this.getDailyQuote()
         this.getDeviceHeight()
     }
-}
+})
 </script>
 
 <style lang="scss">

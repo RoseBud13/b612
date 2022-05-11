@@ -26,8 +26,9 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
   props: {
     continent: {
       type: Object,
@@ -81,7 +82,7 @@ export default {
       this.$emit('landing', { rect, continent })
     }
   }
-}
+})
 </script>
 
 <style lang="scss">

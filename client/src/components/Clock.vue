@@ -23,6 +23,8 @@ Modified by Rosebud on May 6 2020 -->
 </template>
 
 <script>
+import { defineComponent } from 'vue'
+
 function padZero(number) {
     if (number < 10) {
         return '0' + number
@@ -46,7 +48,7 @@ const getMonth = () => padZero(getDate().getMonth() + 1)
 const getDay = () => padZero(getDate().getDate())
 const getWeek = () => week[getDate().getDay()]
 
-export default {
+export default defineComponent({
     name: 'Clock',
     props: ['blink', 'displaySeconds', 'twelveHour'],
     data() {
@@ -81,7 +83,7 @@ export default {
             // console.log(this.theme)
         },
     }
-}
+})
 </script>
 
 <style lang="scss">

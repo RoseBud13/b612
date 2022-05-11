@@ -8,7 +8,9 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
     data() {
         return {
             show: ''
@@ -27,7 +29,7 @@ export default {
     mounted() {
         this.setShow()
     }
-}
+})
 </script>
 
 <style lang="scss">

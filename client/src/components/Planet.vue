@@ -13,10 +13,11 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import { mapState, mapMutations } from 'vuex'
 import Continent from './Continent.vue'
 
-export default {
+export default defineComponent({
   components: {
     Continent
   },
@@ -26,7 +27,7 @@ export default {
   methods: {
     ...mapMutations(['landedCon'])
   }
-}
+})
 </script>
 
 <style lang="scss">

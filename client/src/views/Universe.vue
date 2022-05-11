@@ -14,12 +14,13 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import Space from '../components/Space.vue'
 import Planet from '../components/Planet.vue'
 import ContinentDetail from '../components/ContinentDetail.vue'
 import Port from '../components/Port.vue'
 
-export default {
+export default defineComponent({
     components: {
         Space,
         Planet,
@@ -32,7 +33,7 @@ export default {
             this.$router.push({name: "home"})
         },
     }
-}
+})
 
 </script>
 

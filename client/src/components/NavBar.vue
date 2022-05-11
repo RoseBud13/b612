@@ -24,11 +24,12 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import { mapMutations } from 'vuex';
 import Port from './Port.vue';
 import Clock from './Clock.vue';
 
-export default {
+export default defineComponent({
     components: {
         Port,
         Clock
@@ -67,7 +68,7 @@ export default {
             // console.log(this.theme)
         }
     }
-}
+})
 </script>
 
 <style lang="scss">

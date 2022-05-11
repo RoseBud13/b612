@@ -8,10 +8,12 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import { mapState, mapMutations } from 'vuex'
 import AppBar from './AppBar.vue'
 import Continent from './Continent.vue'
-export default {
+
+export default defineComponent({
   components: {
     AppBar,
     Continent
@@ -62,7 +64,7 @@ export default {
       this.departuredCon()
     },
   }
-}
+})
 </script>
 
 <style lang="scss">

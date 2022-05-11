@@ -5,10 +5,11 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import { mapMutations } from 'vuex';
 import Dashboard from "../components/Dashboard.vue"
 
-export default {
+export default defineComponent({
     components: {
         Dashboard
     },
@@ -61,7 +62,7 @@ export default {
             // console.log(this.theme)
         },
     }
-}
+})
 </script>
 
 <style lang="scss" scoped>

@@ -13,7 +13,9 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
     data() {
         return {
             theme: this.$store.state.homeTheme
@@ -25,7 +27,7 @@ export default {
             // console.log(this.theme)
         }
     }
-}
+})
 </script>
 
 <style lang="scss">

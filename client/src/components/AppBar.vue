@@ -11,7 +11,9 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   props: {
     title: {
       type: String,
@@ -26,7 +28,7 @@ export default {
       default: 'ellipsis-h'
     }
   }
-}
+})
 </script>
 
 <style lang="scss">
