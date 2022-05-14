@@ -40,7 +40,58 @@
                 </div>
             </div>
             <div class="app-box">
-                <div class="app-window"></div>
+                <div class="app-window">
+                    <div class="masonry-view">
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/400?random=1" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/480?random=2" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/420?random=3" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/500?random=4" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/480?random=5" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/500?random=6" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/400?random=7" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/440?random=8" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/460?random=9" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/500?random=10" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/420?random=11" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/480?random=12" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/400?random=13" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/500?random=14" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/480?random=15" alt="pic">
+                        </div>
+                        <div class="masonry-item">
+                            <img src="https://picsum.photos/360/480?random=16" alt="pic">
+                        </div>
+                    </div>
+                </div>
                 <div class="apps">
                     <div class="apps-left">
                         <div class="icon-container logo-color-bili">
@@ -214,11 +265,11 @@ export default defineComponent({
 }
 .weather-date {
     margin: 0 10px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 .weather-info {
     margin: 0 10px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 .widgets {
     overflow: auto;
@@ -276,23 +327,43 @@ export default defineComponent({
 //     background-position: center;
 // }
 .app-window {
-    flex: 6;
+    flex: 5;
 
     margin: 15px 25px 0 25px;
+    min-height: 429px;
+    overflow: auto;
+    border-radius: 20px;
+}
+.app-window::-webkit-scrollbar {
+    display: none;
+}
+.masonry-view {
+    column-count: 5;
+    column-gap: 0;
+}
+.masonry-item {
+    padding: 4px;
+}
+.masonry-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
 }
 .apps {
-    flex: 5;
+    flex: 2;
 
     display: flex;
     margin: 15px 25px;
     max-height: 45%;
+    min-height: 240px;
 }
 .apps-left {
     flex: 1;
 
     display: flex;
     flex-wrap: wrap;
-    align-content: flex-end;
+    // align-content: flex-end;
     padding: 15px;
     overflow: auto;
 }
