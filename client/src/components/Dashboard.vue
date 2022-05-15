@@ -41,56 +41,69 @@
             </div>
             <div class="app-box">
                 <div class="app-window">
-                    <div class="masonry-view">
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/400?random=1" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/480?random=2" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/420?random=3" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/500?random=4" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/480?random=5" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/500?random=6" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/400?random=7" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/440?random=8" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/460?random=9" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/500?random=10" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/420?random=11" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/480?random=12" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/400?random=13" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/500?random=14" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/480?random=15" alt="pic">
-                        </div>
-                        <div class="masonry-item">
-                            <img src="https://picsum.photos/360/480?random=16" alt="pic">
-                        </div>
-                    </div>
+                    <ul class="app-window-slides">
+                        <input type="radio" id="app-window-control-1" name="control" checked>
+                        <input type="radio" id="app-window-control-2" name="control">
+                        <input type="radio" id="app-window-control-3" name="control">
+                        <li class="app-window-slide-item">
+                            <div class="masonry-view">
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/400?random=1" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/480?random=2" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/420?random=3" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/500?random=4" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/480?random=5" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/500?random=6" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/400?random=7" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/440?random=8" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/460?random=9" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/500?random=10" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/420?random=11" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/480?random=12" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/400?random=13" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/500?random=14" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/480?random=15" alt="pic">
+                                </div>
+                                <div class="masonry-item">
+                                    <img src="https://picsum.photos/360/480?random=16" alt="pic">
+                                </div>
+                            </div>
+                        </li>
+                        <li class="app-window-slide-item">
+                            books and movies
+                        </li>
+                        <li class="app-window-slide-item">
+                            to-do list
+                        </li>
+                    </ul>
                 </div>
                 <div class="apps">
                     <div class="apps-left">
@@ -130,7 +143,19 @@
                             </a>
                         </div>
                     </div>
-                    <div class="apps-right"></div>
+                    <div class="apps-right">
+                        <div class="app-window-view-controls">
+                            <label for="app-window-control-1">
+                                <i class="fas fa-comment-alt"></i>
+                            </label>
+                            <label for="app-window-control-2">
+                                <i class="fas fa-bookmark"></i>
+                            </label>
+                            <label for="app-window-control-3">
+                                <i class="fas fa-th-list"></i>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -195,7 +220,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .dashboard {
     position: absolute;
     bottom: 0;
@@ -321,22 +346,65 @@ export default defineComponent({
 .card iframe {
     border-radius: 30px;
 }
-// .img-card {
-//     background-image: url(../assets/img/bili.webp);
-//     background-size: cover;
-//     background-position: center;
-// }
+
 .app-window {
     flex: 5;
 
     margin: 15px 25px 0 25px;
     min-height: 429px;
-    overflow: auto;
-    border-radius: 20px;
 }
-.app-window::-webkit-scrollbar {
+.app-window-slides {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.app-window-slide-item {
+    margin: 0;
+    padding: 0;
+    width: inherit;
+    height: inherit;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: auto;
+
+    transition: .5s transform ease-in-out;
+}
+.app-window-slide-item::-webkit-scrollbar {
     display: none;
 }
+
+.app-window-slide-item:nth-of-type(1) {
+    left: 0;
+}
+.app-window-slide-item:nth-of-type(2) {
+    left: 100%;
+}
+.app-window-slide-item:nth-of-type(3) {
+    left: 200%;
+}
+
+input[type="radio"] {
+    position: relative;
+    display: none;
+}
+
+.app-window-slides input[type="radio"]:nth-of-type(1):checked ~ .app-window-slide-item {
+  transform: translatex(0%);
+}
+
+.app-window-slides input[type="radio"]:nth-of-type(2):checked ~ .app-window-slide-item {
+  transform: translatex(-100%);
+}
+
+.app-window-slides input[type="radio"]:nth-of-type(3):checked ~ .app-window-slide-item {
+  transform: translatex(-200%);
+}
+
 .masonry-view {
     column-count: 5;
     column-gap: 0;
@@ -373,8 +441,7 @@ export default defineComponent({
 .apps-right {
     flex: 1;
 
-    display: flex;
-    padding: 10px;
+    padding: 15px;
 }
 .icon-container {
     width: 75px;
@@ -389,6 +456,30 @@ export default defineComponent({
     left: 50%;
     transform: translate(-50%, -50%);
     width: 70%;
+}
+.app-window-view-controls {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+}
+.app-window-view-controls label {
+    display: block;
+    width: 75px;
+    height: 75px;
+    border-radius: 23%;
+    margin: 20px;
+    background-color: #fff;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+}
+.app-window-view-controls label i {
+    color: #23373d;
 }
 
 .show {

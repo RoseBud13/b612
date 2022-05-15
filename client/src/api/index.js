@@ -1,9 +1,9 @@
-import oneApi from '../utils/request'
+import request from '../utils/request'
 
 export function getOneQuote() {
-    return oneApi({
+    return request({
         method: 'get',
-        url: '/'
+        url: 'oneapi/'
         // url: '/channel/one/0/0'
     })
 }
