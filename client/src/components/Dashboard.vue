@@ -1,7 +1,7 @@
 <template>
     <div class="dashboard" :class="(showDashboard? 'show' : '')">
         <div class="dashboard-container">
-            <div class="widget-box">
+            <div class="widget-panel">
                 <div class="daily-update" :class="[theme]">
                     <div class="quote-content">
                         <div class="quote-text">{{ dailyQuote }}</div>
@@ -39,132 +39,17 @@
                     </div>
                 </div>
             </div>
-            <div class="app-box">
+            <div class="app-panel">
                 <div class="app-window">
                     <ul class="app-window-slides">
                         <input type="radio" id="app-window-control-1" name="control" checked>
                         <input type="radio" id="app-window-control-2" name="control">
                         <input type="radio" id="app-window-control-3" name="control">
                         <li class="app-window-slide-item">
-                            <div class="masonry-view">
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/400?random=1" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/480?random=2" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/420?random=3" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/500?random=4" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/480?random=5" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/500?random=6" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/400?random=7" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/440?random=8" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/460?random=9" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/500?random=10" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/420?random=11" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/480?random=12" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/400?random=13" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/500?random=14" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/480?random=15" alt="pic">
-                                </div>
-                                <div class="masonry-item">
-                                    <img src="https://picsum.photos/360/480?random=16" alt="pic">
-                                </div>
-                            </div>
+                            <post-deck></post-deck>
                         </li>
                         <li class="app-window-slide-item">
-                            <div class="shelf-view">
-                                <div class="shelf-items">
-                                    <div class="shelf-upper">
-                                        <div class="book-item">
-                                            <img src="../assets/img/book_cover.jpeg" alt="book">
-                                        </div>
-                                        <div class="book-item">
-                                            <img src="../assets/img/book_cover.jpeg" alt="book">
-                                        </div>
-                                        <div class="book-item">
-                                            <img src="../assets/img/book_cover.jpeg" alt="book">
-                                        </div>
-                                        <div class="book-item">
-                                            <img src="../assets/img/book_cover.jpeg" alt="book">
-                                        </div>
-                                        <div class="book-item">
-                                            <img src="../assets/img/book_cover.jpeg" alt="book">
-                                        </div>
-                                        <div class="book-item">
-                                            <img src="../assets/img/book_cover.jpeg" alt="book">
-                                        </div>
-                                        <div class="book-item">
-                                            <img src="../assets/img/book_cover.jpeg" alt="book">
-                                        </div>
-                                        <div class="book-item">
-                                            <img src="../assets/img/book_cover.jpeg" alt="book">
-                                        </div>
-                                    </div>
-                                    <div class="shelf-lower">
-                                        <div class="film-item">
-                                            <img src="http://image.tmdb.org/t/p/w500//aKCvdFFF5n80P2VdS7d8YBwbCjh.jpg" alt="film">
-                                        </div>
-                                        <div class="film-item">
-                                            <img src="http://image.tmdb.org/t/p/w500//aKCvdFFF5n80P2VdS7d8YBwbCjh.jpg" alt="film">
-                                        </div>
-                                        <div class="film-item">
-                                            <img src="http://image.tmdb.org/t/p/w500//aKCvdFFF5n80P2VdS7d8YBwbCjh.jpg" alt="film">
-                                        </div>
-                                        <div class="film-item">
-                                            <img src="http://image.tmdb.org/t/p/w500//aKCvdFFF5n80P2VdS7d8YBwbCjh.jpg" alt="film">
-                                        </div>
-                                        <div class="film-item">
-                                            <img src="http://image.tmdb.org/t/p/w500//aKCvdFFF5n80P2VdS7d8YBwbCjh.jpg" alt="film">
-                                        </div>
-                                        <div class="film-item">
-                                            <img src="http://image.tmdb.org/t/p/w500//aKCvdFFF5n80P2VdS7d8YBwbCjh.jpg" alt="film">
-                                        </div>
-                                        <div class="film-item">
-                                            <img src="http://image.tmdb.org/t/p/w500//aKCvdFFF5n80P2VdS7d8YBwbCjh.jpg" alt="film">
-                                        </div>
-                                        <div class="film-item">
-                                            <img src="http://image.tmdb.org/t/p/w500//aKCvdFFF5n80P2VdS7d8YBwbCjh.jpg" alt="film">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="shelf-item-detail">
-                                    <div class="item-wrapper">
-                                        <img src="../assets/img/book_cover.jpeg" alt="book">
-                                        <div class="item-title">
-                                            <p>The Perks of Being a Wallflower</p>
-                                        </div>
-                                        <div class="item-content">
-                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore vitae, iusto sed explicabo dolores consequatur pariatur, rerum tempora illo provident ad necessitatibus consectetur atque culpa itaque maxime delectus iste corrupti.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <shelf-deck></shelf-deck>
                         </li>
                         <li class="app-window-slide-item">
                             to-do list
@@ -173,41 +58,7 @@
                 </div>
                 <div class="apps">
                     <div class="apps-left">
-                        <div class="icon-container logo-color-bili">
-                            <a href="https://bilibili.com" target="_blank">
-                                <img src="../assets/img/logo/bilibili.svg" alt="Bilibili" class="svg-fillter-bili">
-                            </a>
-                        </div>
-                        <div class="icon-container logo-color-gh">
-                            <a href="https://github.com" target="_blank">
-                                <img src="../assets/img/logo/github.svg" alt="GitHub">
-                            </a>
-                        </div>
-                        <div class="icon-container logo-color-weibo">
-                            <a href="https://weibo.com" target="_blank">
-                                <img src="../assets/img/logo/sinaweibo.svg" alt="Weibo" class="svg-fillter-weibo">
-                            </a>
-                        </div>
-                        <div class="icon-container logo-color-douban">
-                            <a href="https://douban.com" target="_blank">
-                                <img src="../assets/img/logo/douban.svg" alt="Douban" class="svg-fillter-douban">
-                            </a>
-                        </div>
-                        <div class="icon-container logo-color-zhihu">
-                            <a href="https://zhihu.com" target="_blank">
-                                <img src="../assets/img/logo/zhihu.svg" alt="Zhihu" class="svg-fillter-zhihu">
-                            </a>
-                        </div>
-                        <div class="icon-container logo-color-yt">
-                            <a href="https://youtube.com" target="_blank">
-                                <img src="../assets/img/logo/youtube.svg" alt="YouTube" class="svg-fillter-yt">
-                            </a>
-                        </div>
-                        <div class="icon-container logo-color-notion">
-                            <a href="https://notion.so" target="_blank">
-                                <img src="../assets/img/logo/notion.svg" alt="Notion">
-                            </a>
-                        </div>
+                        <app-box></app-box>
                     </div>
                     <div class="apps-right">
                         <div class="app-window-view-controls">
@@ -233,11 +84,17 @@ import { defineComponent } from 'vue'
 import { getOneQuote } from "../api"
 import LittleFox from "../components/LittleFox.vue"
 import MiniSlider from "../components/MiniSlider.vue"
+import PostDeck from './PostDeck.vue'
+import ShelfDeck from './ShelfDeck.vue'
+import AppBox from './AppBox.vue'
 
 export default defineComponent({
     components: {
         LittleFox,
-        MiniSlider
+        MiniSlider,
+        PostDeck,
+        ShelfDeck,
+        AppBox
     },
     data() {
         return {
@@ -309,13 +166,13 @@ export default defineComponent({
     //     background-color: #eee;
     // }
 }
-.widget-box {
+.widget-panel {
     flex: 3;
     
     display: flex;
     flex-direction: column;
 }
-.app-box {
+.app-panel {
     flex: 7;
     display: flex;
     flex-direction: column;
@@ -472,126 +329,6 @@ input[type="radio"] {
   transform: translatex(-200%);
 }
 
-.masonry-view {
-    column-count: 5;
-    column-gap: 0;
-}
-.masonry-item {
-    padding: 4px;
-}
-.masonry-item img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-}
-.shelf-view {
-    display: flex;
-    // flex-direction: column;
-    width: 100%;
-    height: 100%;
-
-    // * {
-    //     border: 1px solid black;
-    //     background-color: #eee;
-    // }
-}
-.shelf-items {
-    flex: 1;
-
-    display: flex;
-    flex-direction: column;
-    max-width: calc(100% - 320px);
-    height: 100%;
-}
-.shelf-item-detail {
-    min-width: 320px;
-    width: 320px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.shelf-upper {
-    flex: 1;
-
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
-    height: 100%;
-}
-.shelf-upper::-webkit-scrollbar {
-    display: none;
-}
-.book-item {
-    height: 60%;
-    aspect-ratio: 6 / 7;
-    margin: 0 0 0 30px;
-    background-color: rgba(137, 210, 235, 0.7);
-    border-radius: 13%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.book-item img {
-    height: 70%;
-    border-radius: 13%;
-}
-.shelf-lower {
-    flex: 1;
-
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
-    height: 100%;
-}
-.shelf-lower::-webkit-scrollbar {
-    display: none;
-}
-.film-item {
-    height: 60%;
-    aspect-ratio: 6 / 7;
-    margin: 0 0 0 30px;
-    background-color: rgba(170, 235, 137, 0.7);
-    border-radius: 13%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.film-item img {
-    height: 70%;
-    border-radius: 13%;
-}
-.item-wrapper {
-    height: 90%;
-    width: 100%;
-    background-color: rgba(137, 210, 235, 1);
-    text-align: center;
-    border-radius: 20px;
-}
-.item-wrapper img {
-    height: 40%;
-    margin: 10px;
-}
-.item-title {
-    margin-top: 20px;
-}
-.item-title p {
-    font-size: 1.1rem;
-    color: #fff;
-}
-.item-content {
-    margin: 20px 15px;
-    padding: 10px;
-    text-align: justify;
-}
-.item-content p {
-    font-size: 0.9rem;
-    color: #fff;
-}
-
 .apps {
     flex: 2;
 
@@ -603,10 +340,7 @@ input[type="radio"] {
 .apps-left {
     flex: 1;
 
-    display: flex;
-    flex-wrap: wrap;
-    // align-content: flex-end;
-    padding: 15px;
+    padding: 10px 15px 0 15px;
     overflow: auto;
 }
 .apps-left::-webkit-scrollbar {
@@ -617,20 +351,7 @@ input[type="radio"] {
 
     padding: 15px;
 }
-.icon-container {
-    width: 75px;
-    height: 75px;
-    border-radius: 23%;
-    margin: 20px;
-    position: relative;
-}
-.icon-container img {
-    position: absolute; 
-    top: 50%; 
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 70%;
-}
+
 .app-window-view-controls {
     width: 100%;
     height: 100%;
@@ -659,46 +380,6 @@ input[type="radio"] {
 .show {
     height: calc(var(--vh, 1vh) * 100 - 50px);
     //height: calc(100vh - 50px);
-}
-
-.logo-color-bili {
-    background-color: #5bc9e0;
-}
-.logo-color-gh {
-    background-color: #fff;
-}
-.logo-color-weibo {
-    background-color: #df2029;
-}
-.logo-color-douban {
-    background-color: #2e963d;
-}
-.logo-color-zhihu {
-    background-color: #fff;
-    img {
-        width: 100%;
-    }
-}
-.logo-color-yt {
-    background-color: #fff;
-}
-.logo-color-notion {
-    background-color: #fbf3da;
-}
-.svg-fillter-bili {
-    filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(304deg) brightness(106%) contrast(106%);
-}
-.svg-fillter-weibo {
-    filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(304deg) brightness(106%) contrast(106%);
-}
-.svg-fillter-douban {
-    filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(304deg) brightness(106%) contrast(106%);
-}
-.svg-fillter-zhihu {
-    filter: invert(41%) sepia(98%) saturate(4538%) hue-rotate(191deg) brightness(107%) contrast(89%);
-}
-.svg-fillter-yt {
-    filter: invert(23%) sepia(91%) saturate(7027%) hue-rotate(357deg) brightness(92%) contrast(115%);
 }
 
 .dark .quote-content {
@@ -742,29 +423,12 @@ input[type="radio"] {
         width: 170px;
         height: 170px;
     }
-    .icon-container {
-        margin: 15px;
-    }
-    .shelf-items {
-        max-width: calc(100% - 280px);
-    }
-    .shelf-item-detail {
-        min-width: 280px;
-        width: 280px;
-    }
-    .item-wrapper img {
-        height: 35%;
-        margin: 10px;
-    }
-    .item-title {
-        margin-top: 10px;
-    }
 }
 @media (max-width: 820px) {
     .dashboard-container {
         overflow: auto;
     }
-    .widget-box {
+    .widget-panel {
         width: 100%;
     }
     .dashboard-container {
@@ -784,7 +448,7 @@ input[type="radio"] {
         width: 32vw;
         height: 32vw;
     }
-    .app-box {
+    .app-panel {
         display: none;
     }
 }
@@ -792,7 +456,7 @@ input[type="radio"] {
     .dashboard-container {
         overflow: auto;
     }
-    .widget-box {
+    .widget-panel {
         width: 100%;
     }
     .dashboard-container {
@@ -812,7 +476,7 @@ input[type="radio"] {
         width: 40vw;
         height: 40vw;
     }
-    .app-box {
+    .app-panel {
         display: none;
     }
 }
