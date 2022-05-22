@@ -135,7 +135,7 @@
     top: -50px;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh + 50px);
     background-color: #fff;
     border-radius: 0;
     z-index: 999;
@@ -144,7 +144,7 @@
 }
 #select:checked ~ #select-lable {
     position: fixed;
-    top: 0;
+    top: 0.5rem;
     right: 1rem;
     width: 30px;
     height: 30px;
