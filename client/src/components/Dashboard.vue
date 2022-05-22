@@ -130,15 +130,15 @@ export default defineComponent({
                 console.log(e)
             })
         },
-        getDeviceHeight() {
-            // Update the element's size
-            let vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-        }
+        // getDeviceHeight() {
+        //     // Update the element's size
+        //     let vh = window.innerHeight * 0.01;
+        //     document.documentElement.style.setProperty('--vh', `${vh}px`);
+        // }
     },
     mounted() {
         this.getDailyQuote()
-        this.getDeviceHeight()
+        // this.getDeviceHeight()
     }
 })
 </script>
@@ -165,6 +165,9 @@ export default defineComponent({
     //     // border: 1px solid black;
     //     background-color: #eee;
     // }
+}
+.dashboard-container::-webkit-scrollbar {
+    display: none;
 }
 .widget-panel {
     flex: 3;
@@ -318,15 +321,16 @@ input[type="radio"] {
 }
 
 .app-window-slides input[type="radio"]:nth-of-type(1):checked ~ .app-window-slide-item {
-  transform: translatex(0%);
+//   transform: translatex(0%);
+    transform: none;
 }
 
 .app-window-slides input[type="radio"]:nth-of-type(2):checked ~ .app-window-slide-item {
-  transform: translatex(-100%);
+    transform: translatex(-100%);
 }
 
 .app-window-slides input[type="radio"]:nth-of-type(3):checked ~ .app-window-slide-item {
-  transform: translatex(-200%);
+    transform: translatex(-200%);
 }
 
 .apps {
@@ -358,6 +362,7 @@ input[type="radio"] {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
 
 }
 .app-window-view-controls label {
@@ -378,8 +383,8 @@ input[type="radio"] {
 }
 
 .show {
-    height: calc(var(--vh, 1vh) * 100 - 50px);
-    //height: calc(100vh - 50px);
+    // height: calc(var(--vh, 1vh) * 100 - 50px);
+    height: 100%;
 }
 
 .dark .quote-content {
@@ -426,13 +431,11 @@ input[type="radio"] {
 }
 @media (max-width: 820px) {
     .dashboard-container {
+        flex-direction: column;
         overflow: auto;
     }
     .widget-panel {
         width: 100%;
-    }
-    .dashboard-container {
-        flex-direction: column;
     }
     .widgets {
         flex-direction: column;
@@ -448,9 +451,9 @@ input[type="radio"] {
         width: 32vw;
         height: 32vw;
     }
-    .app-panel {
-        display: none;
-    }
+    // .app-panel {
+    //     display: none;
+    // }
 }
 @media (max-width: 600px) {
     .dashboard-container {
@@ -476,8 +479,8 @@ input[type="radio"] {
         width: 40vw;
         height: 40vw;
     }
-    .app-panel {
-        display: none;
-    }
+    // .app-panel {
+    //     display: none;
+    // }
 }
 </style>

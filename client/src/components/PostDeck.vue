@@ -1,6 +1,7 @@
 <template>
     <div class="post-deck">
         <div class="masonry-view">
+            <post-card></post-card>
             <div class="masonry-item">
                 <img src="https://picsum.photos/360/400?random=1" alt="pic">
             </div>
@@ -54,6 +55,14 @@
 </template>
 
 <script>
+import { defineComponent } from "vue";
+import PostCard from './PostCard.vue'
+
+export default defineComponent({
+    components: {
+        PostCard
+    }
+})
 
 </script>
 
@@ -70,5 +79,21 @@
     width: 100%;
     height: auto;
     border-radius: 10px;
+}
+
+@media (max-width: 1300px) {
+    .masonry-view {
+        column-count: 4;
+    }
+}
+@media (max-width: 1000px) {
+    .masonry-view {
+        column-count: 3;
+    }
+}
+@media (max-width: 600px) {
+    .masonry-view {
+        column-count: 2;
+    }
 }
 </style>

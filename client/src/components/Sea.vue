@@ -48,9 +48,15 @@ export default defineComponent({
             this.startY = 0;
             this.endY = 0;
         });
+        this.getDeviceHeight()
     },
     methods: {
         ...mapMutations(['toggleDashboard']),
+        getDeviceHeight() {
+            // Update the element's size
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
     },
     watch: {
         '$store.state.showDashboard'(newVal, oldVal) {
@@ -89,7 +95,8 @@ export default defineComponent({
 
 /* Dashboard */
 .dashboardMode {
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100 - 50px);
+    z-index: 100;
 }
 
 // @media (max-width: 480px) {
