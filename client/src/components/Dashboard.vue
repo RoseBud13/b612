@@ -1,44 +1,49 @@
 <template>
     <div class="dashboard" :class="(showDashboard? 'show' : '')">
         <div class="dashboard-container">
-            <div class="widget-panel">
-                <div class="daily-update" :class="[theme]">
-                    <div class="quote-content">
-                        <div class="quote-text">{{ dailyQuote }}</div>
-                        <div class="quote-info">{{ quoteInfo }}</div>
-                    </div>
-                    <div class="weather-report">
-                        <div class="weather-date">{{ dateText }}</div>
-                        <div class="weather-info">{{ weatherText }}</div>
-                    </div>
-                </div>
-                <div class="widgets">
-                    <div class="card">
-                        <img :src="dailyPicUrl" alt="daily_pic">
-                    </div>
-                    <div class="card">
-                        <iframe src="https://bubble-player-1306125602.cos-website.ap-shanghai.myqcloud.com" width="100%" height="200" style="border:none;"></iframe>
-                    </div>
-                    <div class="mini-card-wrapper">
-                        <div class="mini-card">
-                            <little-fox></little-fox>
-                        </div>
-                        <div class="mini-card">
-                            <mini-slider></mini-slider>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <iframe src="https://chrome-dino-1306125602.cos-website.ap-shanghai.myqcloud.com" width="100%" height="200" style="border:none;"></iframe>
-                    </div>
-                     <div class="mini-card-wrapper">
-                        <div class="mini-card"></div>
-                        <div class="mini-card"></div>
-                    </div>
-                    <div class="mini-card-wrapper">
-                        <div class="mini-card"></div>
-                    </div>
-                </div>
+            <div class="widget-toggle" :class="[theme]" @click="toggleWidgets">
+                widgets
             </div>
+            <Transition name="widget-panel-show-hide">
+                <div class="widget-panel" v-show="this.showWidgets === 'show'">
+                    <div class="daily-update" :class="[theme]">
+                        <div class="quote-content">
+                            <div class="quote-text">{{ dailyQuote }}</div>
+                            <div class="quote-info">{{ quoteInfo }}</div>
+                        </div>
+                        <div class="weather-report">
+                            <div class="weather-date">{{ dateText }}</div>
+                            <div class="weather-info">{{ weatherText }}</div>
+                        </div>
+                    </div>
+                    <div class="widgets">
+                        <div class="card">
+                            <img :src="dailyPicUrl" alt="daily_pic">
+                        </div>
+                        <div class="card">
+                            <iframe src="https://bubble-player-1306125602.cos-website.ap-shanghai.myqcloud.com" width="100%" height="200" style="border:none;"></iframe>
+                        </div>
+                        <div class="mini-card-wrapper">
+                            <div class="mini-card">
+                                <little-fox></little-fox>
+                            </div>
+                            <div class="mini-card">
+                                <mini-slider></mini-slider>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <iframe src="https://chrome-dino-1306125602.cos-website.ap-shanghai.myqcloud.com" width="100%" height="200" style="border:none;"></iframe>
+                        </div>
+                        <div class="mini-card-wrapper">
+                            <div class="mini-card"></div>
+                            <div class="mini-card"></div>
+                        </div>
+                        <div class="mini-card-wrapper">
+                            <div class="mini-card"></div>
+                        </div>
+                    </div>
+                </div>
+            </Transition>
             <div class="app-panel">
                 <div class="app-window">
                     <ul class="app-window-slides">
@@ -104,7 +109,8 @@ export default defineComponent({
             quoteInfo: '',
             dateText: '',
             weatherText: '',
-            dailyPicUrl: ''
+            dailyPicUrl: '',
+            showWidgets: ''
         }
     },
     watch: {
@@ -130,6 +136,21 @@ export default defineComponent({
                 console.log(e)
             })
         },
+        setWidgetsShow() {
+            let width = Math.max(window.screen.width, window.innerWidth);
+            if (width > '820') {
+                this.showWidgets = 'show'
+            } else {
+                this.showWidgets = 'hide'
+            }
+        },
+        toggleWidgets() {
+            if (this.showWidgets === 'show') {
+                this.showWidgets = 'hide'
+            } else {
+                this.showWidgets = 'show'
+            }
+        }
         // getDeviceHeight() {
         //     // Update the element's size
         //     let vh = window.innerHeight * 0.01;
@@ -138,6 +159,7 @@ export default defineComponent({
     },
     mounted() {
         this.getDailyQuote()
+        this.setWidgetsShow()
         // this.getDeviceHeight()
     }
 })
@@ -169,11 +191,29 @@ export default defineComponent({
 .dashboard-container::-webkit-scrollbar {
     display: none;
 }
+.widget-toggle {
+    width: 100%;
+    height: 1.1rem;
+    margin: 10px 0 0 0;
+    display: none;
+
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: lighter;
+}
 .widget-panel {
     flex: 3;
     
     display: flex;
     flex-direction: column;
+}
+.widget-panel-show-hide-enter-active,
+.widget-panel-show-hide-leave-active {
+  transition: opacity 0.3s ease;
+}
+.widget-panel-show-hide-enter-from,
+.widget-panel-show-hide-leave-to {
+  opacity: 0;
 }
 .app-panel {
     flex: 7;
@@ -411,6 +451,18 @@ input[type="radio"] {
 .sunset .weather-report {
     color: #eee;
 }
+.dark .widget-toggle {
+    color: #eee;
+}
+.night .widget-toggle {
+    color: #eee;
+}
+.light .widget-toggle {
+    color: #23373d;
+}
+.sunset .widget-toggle {
+    color: #eee;
+}
 
 @media (max-width: 1440px) {
     .card {
@@ -434,17 +486,26 @@ input[type="radio"] {
         flex-direction: column;
         overflow: auto;
     }
+    .widget-toggle {
+        display: block;
+    }
     .widget-panel {
         width: 100%;
+    }
+    .daily-update {
+        max-width: 100%;
+        margin: 15px 100px;
     }
     .widgets {
         flex-direction: column;
     }
     .card {
-        width: auto;
+        max-width: 75%;
+        margin: 25px auto 0 auto;
     }
     .mini-card-wrapper {
-        width: auto;
+        max-width: 75%;
+        margin: 25px auto 0 auto;
         height: 32vw;
     }
     .mini-card {
@@ -465,14 +526,18 @@ input[type="radio"] {
     .dashboard-container {
         flex-direction: column;
     }
+    .daily-update {
+        max-width: 100%;
+        margin: 15px 10px;
+    }
     .widgets {
         flex-direction: column;
     }
     .card {
-        width: auto;
+        max-width: 85%;
     }
     .mini-card-wrapper {
-        width: auto;
+        max-width: 85%;
         height: 40vw;
     }
     .mini-card {
