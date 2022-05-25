@@ -18,7 +18,7 @@ export default defineComponent({
     },
     methods: {
         setShow() {
-            var width = Math.max(window.screen.width, window.innerWidth);
+            let width = Math.max(window.screen.width, window.innerWidth);
             if (width > '480') {
                 this.show = 'show'
             } else {

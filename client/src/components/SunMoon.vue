@@ -1,5 +1,5 @@
 <template>
-    <div class="sun-moon">
+    <div class="sun-moon" @dblclick="toggleSearchArea">
         <div id="sun-moon-container" :class="[theme]">
             <div class="bg"></div>
             <div class="moon-box">
@@ -9,22 +9,37 @@
                 <div class="sun"></div>
             </div>
         </div>
+        <Transition name="search-area-show">
+            <div class="search-area" v-show="showSearchArea">
+                <search-box></search-box>
+            </div>
+        </Transition>
     </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
+import SearchBox from './SearchBox.vue'
 
 export default defineComponent({
+    components: {
+        SearchBox
+    },
     data() {
         return {
-            theme: this.$store.state.homeTheme
+            theme: this.$store.state.homeTheme,
+            showSearchArea: false
         }
     },
     watch: {
         '$store.state.homeTheme'(newVal, oldVal) {
             this.theme = newVal
             // console.log(this.theme)
+        }
+    },
+    methods: {
+        toggleSearchArea() {
+            this.showSearchArea = !this.showSearchArea
         }
     }
 })
@@ -36,6 +51,21 @@ export default defineComponent({
 }
 #sun-moon-container {
     height: 100vh;
+}
+.search-area {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.search-area-show-enter-active,
+.search-area-show-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.search-area-show-enter-from,
+.search-area-show-leave-to {
+  opacity: 0;
 }
 .bg{
     position: absolute;
