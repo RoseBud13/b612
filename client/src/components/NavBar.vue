@@ -71,7 +71,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .nav-bar {
     position: absolute;
     top: 0;

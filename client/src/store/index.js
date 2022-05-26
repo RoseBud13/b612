@@ -34,7 +34,58 @@ export default createStore({
         homeThemeIcon: 'sun',
         homeTheme: 'night',
         showDashboard: false,
-        isHomeThemeWithPic: true
+        isHomeThemeWithPic: true,
+        tasks: [
+            {
+                id: 3,
+                title: 'Modify the homepage',
+                date: new Date(),
+                done: true,
+                deleted: false
+            },
+            {
+                id: 4,
+                title: 'Add todo page',
+                date: new Date(),
+                done: true,
+                deleted: false
+            },
+            {
+                id: 5,
+                title: 'Work out',
+                date: new Date(),
+                done: false,
+                deleted: false
+            },
+            {
+                id: 6,
+                title: 'Weekly Report',
+                date: new Date(),
+                done: true,
+                deleted: false
+            },
+            {
+                id: 7,
+                title: 'Deploy backend',
+                date: new Date('2022-06-01'),
+                done: false,
+                deleted: false
+            },    
+            {
+                id: 9,
+                title: 'Braintorming',
+                date: new Date('2022-05-16'),
+                done: false,
+                deleted: false
+            },
+            {
+                id: 8,
+                title: 'Food purchasing',
+                date: new Date('2022-05-20'),
+                done: false,
+                deleted: false
+            }
+        ],
     },
     mutations: {
         landedCon (state, landed) {
@@ -87,8 +138,21 @@ export default createStore({
                     state.homeTheme = 'sunset'
                 }
             }
+        },
+        deleteTask (_, { task }) {
+            task.deleted = true
+        },
+    },
+    getters: {
+        todayTasks (state) {
+            const tasks = []
+            state.tasks.forEach(task => {
+                if (task.date <= tomorrow && !task.done && !task.deleted) {
+                    tasks.push(task)
+                }
+            })
+            return tasks
         }
-
     },
     actions: {},
     modules: {}

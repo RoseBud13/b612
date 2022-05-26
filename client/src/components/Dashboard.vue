@@ -57,7 +57,7 @@
                             <shelf-deck></shelf-deck>
                         </li>
                         <li class="app-window-slide-item">
-                            to-do list
+                            <todo-deck></todo-deck>
                         </li>
                     </ul>
                 </div>
@@ -91,6 +91,7 @@ import LittleFox from "../components/LittleFox.vue"
 import MiniSlider from "../components/MiniSlider.vue"
 import PostDeck from './PostDeck.vue'
 import ShelfDeck from './ShelfDeck.vue'
+import TodoDeck from './TodoDeck.vue'
 import AppBox from './AppBox.vue'
 
 export default defineComponent({
@@ -99,6 +100,7 @@ export default defineComponent({
         MiniSlider,
         PostDeck,
         ShelfDeck,
+        TodoDeck,
         AppBox
     },
     data() {
