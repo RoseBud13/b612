@@ -139,9 +139,12 @@ export default createStore({
                 }
             }
         },
-        deleteTask (_, { task }) {
+        deleteTask(_, { task }) {
             task.deleted = true
         },
+        addTask(state, newTask) {
+            state.tasks.push(newTask)
+        }
     },
     getters: {
         todayTasks (state) {

@@ -9,13 +9,19 @@
                 <span class="todo_progress_num">{{ progress }}</span>
             </div>
             <div class="todo_tasks">
+                <div class="add-task">
+                    <input v-model="newTaskTitle" type="text" placeholder="Add new task">
+                    <div class="task-sbmt" @click="addNewTask">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                </div>
                 <h4 class="todo_subtitle" v-if="todayTasks.length">Today</h4>
                 <ul>
                     <li v-for="task in todayTasks" :key="task.id">
                         <task :task="task" />
                     </li>
                 </ul>
-                <h4 class="todo_subtitle" v-if="tomorrowTasks.length">Future</h4>
+                <h4 class="todo_subtitle" v-if="tomorrowTasks.length">Upcoming</h4>
                 <ul>
                     <li v-for="task in tomorrowTasks" :key="task.id">
                         <task :task="task" :showDate="true" />
@@ -34,7 +40,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import Task from './Task.vue'
 import { today, tomorrow } from '../utils/timechecker'
 
@@ -44,7 +50,27 @@ export default defineComponent({
     },
     data() {
         return {
-            colors: ['#ff6666', '#ffcccc']
+            colors: ['#ff6666', '#ffcccc'],
+            newTaskTitle: ''
+        }
+    },
+    methods: {
+        ...mapMutations(['addTask']),
+        addNewTask() {
+            if (this.newTaskTitle) {
+                let newTask = {
+                    id: this.getRandomArbitrary(10, 100),
+                    title: this.newTaskTitle,
+                    date: new Date(),
+                    done: false,
+                    deleted: false
+                }
+                this.addTask(newTask)
+                this.newTaskTitle = ''
+            }
+        },
+        getRandomArbitrary(min, max) {
+            return Math.random() * (max - min) + min
         }
     },
     computed: {
@@ -94,12 +120,11 @@ export default defineComponent({
 .todo-container {
     width: 70%;
     max-width: 600px;
-    height: 80%;
-    max-height: 400px;
+    height: 85%;
+    max-height: 450px;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.7);
     border-radius: 20px;
-    // border: 1px solid black;
 }
 .todo_tips {
     font-size: 1.1rem;
@@ -129,9 +154,36 @@ export default defineComponent({
 }
 .todo_tasks {
     width: 70%;
-    height: 80%;
+    height: 75%;
     margin: 0 auto;
     overflow: auto;
+}
+.add-task {
+    width: 100%;
+    border-bottom: 1px solid #eee;
+    padding: 5px 0;
+
+    display: flex;
+    justify-content: space-between;
+}
+.add-task input {
+    width: 80%;
+    line-height: 20px;
+    border: 0;
+    outline: none;
+    background: none;
+}
+.add-task input:focus::placeholder {
+  color: transparent;
+}
+.task-sbmt {
+    line-height: 20px;
+}
+.task-sbmt i {
+    padding: 0 10px;
+    font-size: 16px;
+    color: #808080;
+    cursor: pointer;
 }
 .todo_tasks::-webkit-scrollbar {
     display: none;
@@ -153,7 +205,6 @@ export default defineComponent({
         height: 90%;
         max-height: 90%;
         padding: 20px;
-        border-radius: 0;
     }
     .todo_progress {
         width: 95%;
