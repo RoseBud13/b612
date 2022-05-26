@@ -18,7 +18,7 @@
                 <h4 class="todo_subtitle" v-if="todayTasks.length">Today</h4>
                 <ul>
                     <li v-for="task in todayTasks" :key="task.id">
-                        <task :task="task" />
+                        <task :task="task" :showDate="false" />
                     </li>
                 </ul>
                 <h4 class="todo_subtitle" v-if="tomorrowTasks.length">Upcoming</h4>

@@ -1,30 +1,23 @@
 <template>
     <div class="post-card">
-        <input type="checkbox" name="" id="select">
-        <label for="select" id="select-lable">
+        <input type="checkbox" :id="post_select_id">
+        <label :for="post_select_id">
             <i class="fas fa-times"></i>
         </label>
         <div class="card">
             <div class="card-cover">
-                <img src="../assets/img/planets.jpg" alt="img">
+                <img :src="post.post_cover" alt="img">
             </div>
             <div class="card-title">
-                🪐&nbsp;B612星球的第一篇公开电报!&nbsp;🎉
+                {{ post.post_title }}
             </div>
             <div class="content">
-                <p>五月初开始，荒废了快一年的个人主页终于重新开始施工了。所谓的个人主页，也不仅仅是“我自己的”主页，希望以后这里可以有小伙伴们一同玩耍，每个人都能拥有一颗属于自己的星球&nbsp;🌍&nbsp;。</p>
-                <p>困的不行了，我先睡一觉起来再好好写吧。</p>
-                <p>💤</p>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <img src="../assets/img/cat_meme.jpg" alt="img">
+                <div v-html="post.post_content_text"></div>
+                <img v-if="post.post_img_url.length" :src="post.post_img_url" alt="img">
             </div>
             <div class="card-footer">
                 <div class="timestamp">
-                    2022/5/23
+                    {{ post.post_timestamp }}
                 </div>
                 <div class="card-icons">
                     <i class="fas fa-bookmark"></i>
@@ -35,16 +28,32 @@
 </template>
 
 <script>
+import { defineComponent } from "vue"
+
+let PID = 1
+export default defineComponent({
+    props: {
+        post: {
+            type: Object,
+            required: true
+        }
+    },
+    data() {
+        return {
+            post_select_id: `post-${PID++}`,
+        }
+    }
+})
 
 </script>
 
 <style lang="scss" scoped>
-#select {
+.post-card input {
     display: none;
 }
 
 .post-card {
-    margin: 4px;
+    padding: 0 4px;
     position: relative;
 }
 
@@ -87,7 +96,7 @@
     line-height: 1.7rem;
     background-color: #fff;
 }
-.content p {
+.content::v-deep p {
     margin-bottom: 1.5rem;
 }
 .content img {
@@ -114,22 +123,22 @@
     color: rgb(241, 78, 78);
 }
 
-#select-lable {
+.post-card label {
     display: block;
     position: absolute;
     top: 0;
     right: 0;
     width: 100%;
     height: 100%;
-    z-index: 999;
+    z-index: 99;
     transition-delay: 0s;
 }
-#select-lable i {
+.post-card label i {
     display: none;
     color: #fff;
 }
 
-#select:checked ~ .card {
+.post-card input:checked ~ .card {
     display: block;
     position: fixed;
     top: -50px;
@@ -142,7 +151,7 @@
 
     overflow: auto;
 }
-#select:checked ~ #select-lable {
+.post-card input:checked ~ label {
     position: fixed;
     top: 0.5rem;
     right: 1rem;
@@ -159,30 +168,30 @@
     transition-delay: 0.6s;
 }
 
-#select:checked ~ #select-lable i {
+.post-card input:checked ~ label i {
     display: block;
 }
 
-#select:checked ~ .card .card-cover {
+.post-card input:checked ~ .card .card-cover {
     height: 25vh;
     overflow: hidden;
 }
-#select:checked ~ .card .card-cover img {
+.post-card input:checked ~ .card .card-cover img {
     border-radius: 0;
 }
 
-#select:checked ~ .card .card-title {
+.post-card input:checked ~ .card .card-title {
     transform: translateY(-15vh);
     color: #fff;
     font-size: 2.5rem;
     text-align: center;
 }
 
-#select:checked ~ .card .card-footer {
+.post-card input:checked ~ .card .card-footer {
     display: none;
 }
 
-#select:checked ~ .card .content {
+.post-card input:checked ~ .card .content {
     display: block;
     animation: content 2s;
     transform: translateY(-50px);

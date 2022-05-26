@@ -7,3 +7,10 @@ export function getOneQuote() {
         // url: '/channel/one/0/0'
     })
 }
+
+export function getPostContent() {
+    return request({
+        method: 'get',
+        url: 'static/post_content.json'
+    })
+}
