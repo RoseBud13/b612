@@ -1,0 +1,51 @@
+// MongoDB Playground
+// To disable this template go to Settings | MongoDB | Use Default Template For Playground.
+// Make sure you are connected to enable completions and to be able to run a playground.
+// Use Ctrl+Space inside a snippet or a string literal to trigger completions.
+
+// Select the database to use.
+use('testData');
+
+// The drop() command destroys all data from a collection.
+// Make sure you run it against the correct database and collection.
+db.testData.drop();
+
+// Insert a few documents into the sales collection.
+db.testData.insertMany([
+  { 'item': 'one', 'price': 10, 'quantity': 2, 'date': new Date('2014-03-01T08:00:00Z') },
+  { 'item': 'two', 'price': 20, 'quantity': 1, 'date': new Date('2014-03-01T09:00:00Z') },
+  { 'item': 'three', 'price': 5, 'quantity': 10, 'date': new Date('2014-03-15T09:00:00Z') },
+]);
+
+// Run a find command to view items sold on April 4th, 2014.
+db.testData.find({ date: { $gte: new Date('2014-04-04'), $lt: new Date('2014-04-05') } });
+
+// Build an aggregation to view total sales for each product in 2014.
+const aggregation = [
+  { $match: { date: { $gte: new Date('2014-01-01'), $lt: new Date('2015-01-01') } } },
+  { $group: { _id: '$item', totalSaleAmount: { $sum: { $multiply: [ '$price', '$quantity' ] } } } }
+];
+
+// Run the aggregation and open a cursor to the results.
+// Use toArray() to exhaust the cursor to return the whole result set.
+// You can use hasNext()/next() to iterate through the cursor page by page.
+db.testData.aggregate(aggregation);
+
+// Select the database to use.
+use('b612DB');
+
+db.user.insertOne(
+  {'uid': 'init_test', 'email': 'init_test@test.com', 'username': 'init_test', 'password': 'init_test', 'display_name': 'init_test', 'profile': 'init_test', 'user_type': ['init_test'], 'is_vip': 'init_test'}
+);
+
+db.post.insertOne(
+   {'post_id': 'init_test', 'title': 'init_test', 'cover': 'init_test', 'author_uid': 'init_test', 'author': 'init_test', 'content': 'init_test', 'post_type': 'init_test'}
+);
+
+db.comment.insertOne(
+  {"comment_id": "init_test", "comment_of": "init_test", "content": "init_test", "author_uid": "init_test", 'author': 'init_test', 'likes': '123'}
+);
+
+db.like.insertOne(
+  {"like_id": "init_test", "like_of": "init_test", "author_uid": "init_test", "author": "init_test"}
+);
