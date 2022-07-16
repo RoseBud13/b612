@@ -2,6 +2,13 @@ import {createStore} from 'vuex'
 
 export default createStore({
     state: {
+        landed: null,
+        departured: null,
+        homeThemeIcon: 'sun',
+        homeTheme: 'night',
+        showDashboard: false,
+        isHomeThemeWithPic: true,
+        showLogin: false,
         continent:
         {
             name: '欢迎来到B612星球',
@@ -29,12 +36,6 @@ export default createStore({
             }
             ],
         },
-        landed: null,
-        departured: null,
-        homeThemeIcon: 'sun',
-        homeTheme: 'night',
-        showDashboard: false,
-        isHomeThemeWithPic: true,
         tasks: [
             {
                 id: 3,
@@ -144,6 +145,13 @@ export default createStore({
         },
         addTask(state, newTask) {
             state.tasks.push(newTask)
+        },
+        toggleLoginModal(state, modalStatus) {
+            if (modalStatus === false) {
+                state.showLogin = true
+            } else {
+                state.showLogin = false
+            }
         }
     },
     getters: {

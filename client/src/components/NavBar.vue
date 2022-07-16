@@ -26,7 +26,7 @@
                     </ul>
                 </div>
                 <div class="menu-item">
-                    <div class="menu-btn">
+                    <div class="menu-btn" @click="toggleLoginModal(this.showLogin)">
                         <i class="fas fa-user-circle"></i>
                     </div>
                 </div>
@@ -51,11 +51,12 @@ export default defineComponent({
             icon: this.$store.state.homeThemeIcon,
             dashboard: this.$store.state.showDashboard,
             theme: this.$store.state.homeTheme,
-            themeWithPic: this.$store.state.isHomeThemeWithPic
+            themeWithPic: this.$store.state.isHomeThemeWithPic,
+            showLogin: this.$store.state.showLogin
         }
     },
     methods: {
-        ...mapMutations(['toggleHomeTheme', 'toggleDashboard', 'toggleHomeThemeWithPic']),
+        ...mapMutations(['toggleHomeTheme', 'toggleDashboard', 'toggleHomeThemeWithPic', 'toggleLoginModal']),
 
         toUniverse() {
             this.$router.push({name: "universe"})
@@ -78,6 +79,9 @@ export default defineComponent({
             this.themeWithPic = newVal
             // console.log(this.themeWithPic)
             // console.log(this.theme)
+        },
+        '$store.state.showLogin'(newVal, oldVal) {
+            this.showLogin = newVal
         }
     }
 })
