@@ -1,6 +1,6 @@
 <template>
     <div class="nav-bar">
-        <div class="nav-bar-container">
+        <div class="nav-bar-container" :class="(dashboard? 'dashboard-shown' : '')">
             <div class="nav-bar-left">
                 <port @goTo="toUniverse"></port>
             </div>
@@ -9,14 +9,26 @@
                     <clock :blink="true" :displaySeconds="false" :twelveHour="false"></clock>
                 </div>
             </div>
-            <div class="nav-bar-right">
-                <div class="toggle-box" :class="[theme]" @click="toggleHomeThemeWithPic(this.themeWithPic)">
-                    <i v-if="theme === 'light'" class="fas fa-image"></i>
-                    <i v-else-if="theme === 'dark'" class="fas fa-image"></i>
-                    <i v-else class="fas fa-shapes"></i>
+            <div class="nav-bar-right" :class="[theme]">
+                <div class="menu-item">
+                    <div class="menu-btn">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <ul class="menu-subitems">
+                        <li @click="toggleHomeThemeWithPic(this.themeWithPic)">
+                            <i v-if="theme === 'light'" class="fas fa-image"></i>
+                            <i v-else-if="theme === 'dark'" class="fas fa-image"></i>
+                            <i v-else class="fas fa-shapes"></i>
+                        </li>
+                        <li @click="toggleHomeTheme(this.icon)">
+                            <i :class="['fas', `fa-${icon}`]"></i>
+                        </li>
+                    </ul>
                 </div>
-                <div class="toggle-box" :class="[theme]" @click="toggleHomeTheme(this.icon)">
-                    <i :class="['fas', `fa-${icon}`]"></i>
+                <div class="menu-item">
+                    <div class="menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -72,22 +84,27 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+ul {
+  list-style: none;
+}
 .nav-bar {
     position: absolute;
     top: 0;
     z-index: 100;
-}
-.nav-bar-container {
     width: 100vw;
     height: 50px;
-    // background-color: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    // box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
-
+}
+.nav-bar-container {
+    width: 100%;
+    height: 100%;
+    font-size: 17px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+.dashboard-shown {
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
 }
 .nav-bar-left {
     flex: 1;
@@ -108,33 +125,60 @@ export default defineComponent({
     width: 100%;
     height: 30px;
 }
-.toggle-box {
-    // background: rgba(255, 255, 255, 0.5);
-    // color: #000;
+.menu-item {
+    position: relative;
     width: 40px;
     height: 30px;
     line-height: 30px;
     text-align: center;
-    margin: 15px;
-    font-size: 16px;
+    margin: 0 10px 0 0;
     border-radius: 5px;
     cursor: pointer;
-    // margin-left: auto;
-    // box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
 }
-.toggle-box:hover{
-    background: #bbbaba;
+.menu-item:hover .menu-btn i {
+    color: #49b1f5;
 }
-.dark .fas {
+.menu-subitems {
+  position: absolute;
+  display: none;
+  right: 0;
+  width: 40px;
+  box-shadow: 0 5px 20px -4px rgba(0, 0, 0, 0.5);
+  background-color: #fff;
+  animation: showsub 0.3s 0.1s ease both;
+}
+.menu-subitems i {
+    color: #23373d;
+    margin-top: 10px;
+}
+.menu-item:hover .menu-subitems {
+  display: block;
+}
+.menu-subitems li:hover i {
+    color: #49b1f5;
+}
+.dark .menu-btn i {
     color: #daf6ff;
 }
-.night .fas {
+.night .menu-btn i {
     color: #daf6ff;
 }
-.light .fas {
+.light .menu-btn i {
     color: #23373d;
 }
-.sunset .fas {
+.sunset .menu-btn i {
     color: #daf6ff;
+}
+@keyframes showsub {
+  0% {
+    opacity: 0;
+    filter: alpha(opacity=0);
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    filter: none;
+    transform: translateY(0);
+  }
 }
 </style>

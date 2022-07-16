@@ -99,19 +99,19 @@ export default defineComponent({
 }
 .dark .time {
     color: #daf6ff;
-    text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
+    // text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
 }
 .light .time {
     color: #23373d;
-    text-shadow: 0 0 20px #57656a, 0 0 20px rgba(10, 175, 230, 0);
+    // text-shadow: 0 0 20px #57656a, 0 0 20px rgba(10, 175, 230, 0);
 }
 .night .time {
     color: #daf6ff;
-    text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
+    // text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
 }
 .sunset .time {
     color: #daf6ff;
-    text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
+    // text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
 }
 
 .greetings {
