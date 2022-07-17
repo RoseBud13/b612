@@ -13,9 +13,9 @@
                             欢迎注册B612
                         </div>
                         <div class="input-box">
-                            <input type="text" placeholder="邀请码">
+                            <input type="text" :placeholder="bpCheckInputText" v-model="bpCode">
                         </div>
-                        <button id="bp-check" @click="goToRegister()">验证</button>
+                        <button id="bp-check" @click="initBpVerify()">{{ bpCheckBtnText }}</button>
                     </div>
                     <div class="signup-box" :class="signUpBoxClass">
                         <div class="promote-text">
@@ -26,7 +26,7 @@
                             <input type="password" placeholder="密码">
                             <input type="password" placeholder="确认密码">
                         </div>
-                        <div id="bp-back" @click="goToBpVerify()">返回</div>
+                        <div class="bp-back" @click="backToBpCard()">返回</div>
                         <button>注册</button>
                     </div>
                 </div>
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { verifyBpCode } from "../api"
 import { defineComponent } from 'vue'
 import { mapMutations } from 'vuex';
 import SpaceEmbed from './SpaceEmbed.vue';
@@ -65,19 +66,41 @@ export default defineComponent({
             bpBoxClass: '',
             registerBoxClass: '',
             loginBoxClass: 'slide-up',
-            showLogin: this.$store.state.showLogin
+            showLogin: this.$store.state.showLogin,
+            bpCheckInputText: '邀请码',
+            bpCheckBtnText: '验证',
+            bpCode: ''
         }
     },
     methods: {
          ...mapMutations(['toggleLoginModal']),
 
-        goToRegister() {
-            this.signUpBoxClass = 'bp-toggle-on';
-            this.bpBoxClass = 'bp-toggle-off';
+        initBpVerify() {
+            this.bpCheckBtnText = '验证中...';
+            if (this.bpCode != '') {
+                let data = {'passcode': this.bpCode};
+
+                verifyBpCode(data).then(res => {
+                    console.log(res.data);
+                    if (res.data.status) {
+                        this.signUpBoxClass = 'bp-toggle-on';
+                        this.bpBoxClass = 'bp-toggle-off';
+                        this.bpCheckBtnText = '验证';
+                    } else {
+                        this.bpCheckBtnText = '验证失败';
+                    }
+                }).catch(e => {
+                    console.log(e);
+                })
+            } else {
+                this.bpCheckInputText = '请填写邀请码';
+                this.bpCheckBtnText = '验证';
+            }
         },
-        goToBpVerify() {
+        backToBpCard() {
             this.signUpBoxClass = '';
             this.bpBoxClass = '';
+            this.bpCheckBtnText = '验证';
         },
         showLoginCard() {
             if (this.loginBoxClass == 'slide-up') {
@@ -242,7 +265,7 @@ export default defineComponent({
     background-color: rgb(95, 140, 128);
     color: rgba(255,255,255,0.8);
 }
-#bp-back {
+.bp-back {
     text-align: center;
     cursor: pointer;
     margin-top: 10px;

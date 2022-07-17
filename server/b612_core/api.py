@@ -72,11 +72,11 @@ def verify_bp_code():
 
     bp_code = data['passcode']
     print(bp_code)
-    passed, pending_code = check_boarding_pass(bp_code)
-    if passed:
-        return jsonify({'pending_code': pending_code}), 201
+    status, pending_code = check_boarding_pass(bp_code)
+    if status == True:
+        return jsonify({'status': status, 'pending_code': pending_code})
     else:
-        return jsonify({'message': pending_code}), 403
+        return jsonify({'status': status, 'message': pending_code})
 
 
 @api.route('/register-user', methods=['POST'])
