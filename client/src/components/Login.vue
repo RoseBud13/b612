@@ -2,6 +2,7 @@
     <div class="login" v-if="this.showLogin">
         <div class="back-drop" @click="toggleLoginModal(this.showLogin)"></div>
         <div class="login-card">
+            <space-embed></space-embed>
             <div class="container">
                 <div class="register-box" :class="registerBoxClass">
                     <h2 class="register-title" @click="showRegisterCard()">
@@ -9,7 +10,7 @@
                     </h2>
                     <div class="bp-box" :class="bpBoxClass">
                         <div class="promote-text">
-                            请填写邀请码
+                            欢迎注册B612
                         </div>
                         <div class="input-box">
                             <input type="text" placeholder="邀请码">
@@ -52,8 +53,12 @@
 <script>
 import { defineComponent } from 'vue'
 import { mapMutations } from 'vuex';
+import SpaceEmbed from './SpaceEmbed.vue';
 
 export default defineComponent({
+    components: {
+        SpaceEmbed
+    },
     data() {
         return {
             signUpBoxClass: '',
@@ -112,7 +117,7 @@ export default defineComponent({
     height: 100%;
     top: 0;
     left: 0;
-    background-color: rgba(33, 33, 33, 0.6);
+    background-color: rgba(225, 225, 225, 0.4);
     z-index: 201;
 }
 .login-card {
@@ -122,24 +127,15 @@ export default defineComponent({
     transform: translate(-50%, -50%);
     width: 350px;
     height: 550px;
+    border-radius: 15px;
     z-index: 201;
 }
 .container {
-    background-color: #222;
     border-radius: 15px;
     width: 350px;
     height: 550px;
     overflow: hidden;
     position: relative;
-}
-.container::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url(../assets/img/login_bg.jpg) no-repeat;
-    background-size: 500px;
-    background-position: left bottom;
-    opacity: 0.8;
 }
 
 /* 注册区域（登录区域很多样式和注册区域的一样，故而一些统一的样式写在了一起） */
@@ -182,7 +178,10 @@ export default defineComponent({
     font-size: 27px;
     text-align: center;
 }
-.register-title span,
+.register-title span {
+    color: rgba(255,255,255,0.4);
+    display: none;
+}
 .login-title span {
     color: rgba(0,0,0,0.4);
     display: none;
@@ -227,10 +226,10 @@ export default defineComponent({
     width: 100%;
     padding: 13px 45px;
     margin: 15px 0;
-    background: rgba(0,0,0,0.4);
+    background: rgba(255,255,255,0.4);
     border: none;
     border-radius: 15px;
-    color: rgba(255,255,255,0.8);
+    color: rgba(0,0,0,0.8);
     font-size: 15px;
     font-weight: bold;
     cursor: pointer;
@@ -240,12 +239,14 @@ export default defineComponent({
 }
 .register-box button:hover,
 .login-box button:hover {
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgb(95, 140, 128);
+    color: rgba(255,255,255,0.8);
 }
 #bp-back {
     text-align: center;
     cursor: pointer;
     margin-top: 10px;
+    color: rgba(255,255,255,0.8);
 }
 
 /* 登录区域 */
