@@ -1,3 +1,4 @@
+// https://medium.com/geekculture/mapgetters-with-vue3-vuex4-and-script-setup-5827f83930b4
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 

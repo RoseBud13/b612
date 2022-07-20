@@ -13,7 +13,7 @@
                             欢迎注册B612
                         </div>
                         <div class="input-box">
-                            <input type="text" :placeholder="state.bpCheckInputText" v-model="state.bpCode">
+                            <input type="text" :placeholder="state.bpCheckInputText" v-model="state.bpCode" @keyup.enter="initBpVerify()">
                         </div>
                         <button id="bp-check" @click="initBpVerify()">{{ state.bpCheckBtnText }}</button>
                     </div>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="login-box" :class="state.loginBoxClass">
                     <div class="little-prince">
-                        <img src="../assets/img/prince.png" alt="">
+                        <img src="../assets/img/prince.png" alt="little-prince">
                     </div>
                     <div class="center">
                         <h2 class="login-title" @click="showLoginCard()">
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, watch } from 'vue';
+import { defineComponent, reactive, watch, getCurrentInstance } from 'vue';
 import { useStore } from 'vuex';
 import { verifyBpCode } from "../api";
 import { mapMutations } from '../utils/map-state';
@@ -63,6 +63,8 @@ export default defineComponent({
     },
     setup() {
         const store = useStore();
+
+        const { proxy } = getCurrentInstance();
 
         const state = reactive({
             signUpBoxClass: '',
@@ -87,17 +89,21 @@ export default defineComponent({
         const initBpVerify = () => {
             state.bpCheckBtnText = '验证中...';
             if (state.bpCode != '') {
-
                 let data = {'passcode': state.bpCode};
-
                 verifyBpCode(data).then(res => {
                     console.log(res.data);
                     if (res.data.status) {
                         state.signUpBoxClass = 'bp-toggle-on';
                         state.bpBoxClass = 'bp-toggle-off';
+                        state.bpCode = '';
+                        state.bpCheckInputText = '邀请码';
                         state.bpCheckBtnText = '验证';
+                        proxy.$toast('验证成功', 'success', 2000);
                     } else {
-                        state.bpCheckBtnText = '验证失败';
+                        state.bpCode = '';
+                        state.bpCheckInputText = '请重新填写邀请码';
+                        state.bpCheckBtnText = '验证';
+                        proxy.$toast('邀请码验证失败', 'error', 2000);
                     }
                 }).catch(e => {
                     console.log(e);
@@ -105,6 +111,7 @@ export default defineComponent({
             } else {
                 state.bpCheckInputText = '请填写邀请码';
                 state.bpCheckBtnText = '验证';
+                proxy.$toast('邀请码不能为空', 'warning', 2000);
             }
         };
 
@@ -215,7 +222,7 @@ export default defineComponent({
     height: 100%;
     top: 0;
     left: 0;
-    background-color: rgba(225, 225, 225, 0.4);
+    background-color: rgba(0, 0, 0, 0.3);
     z-index: 201;
 }
 .login-card {
