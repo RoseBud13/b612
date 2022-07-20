@@ -1,23 +1,23 @@
 <template>
-    <div class="login" v-if="this.showLogin">
-        <div class="back-drop" @click="toggleLoginModal(this.showLogin)"></div>
+    <div class="login" v-if="state.showLogin">
+        <div class="back-drop" @click="toggleLoginModal(state.showLogin)"></div>
         <div class="login-card">
             <space-embed></space-embed>
             <div class="container">
-                <div class="register-box" :class="registerBoxClass">
+                <div class="register-box" :class="state.registerBoxClass">
                     <h2 class="register-title" @click="showRegisterCard()">
                         <span>没有账号，去</span>注册
                     </h2>
-                    <div class="bp-box" :class="bpBoxClass">
+                    <div class="bp-box" :class="state.bpBoxClass">
                         <div class="promote-text">
                             欢迎注册B612
                         </div>
                         <div class="input-box">
-                            <input type="text" :placeholder="bpCheckInputText" v-model="bpCode">
+                            <input type="text" :placeholder="state.bpCheckInputText" v-model="state.bpCode">
                         </div>
-                        <button id="bp-check" @click="initBpVerify()">{{ bpCheckBtnText }}</button>
+                        <button id="bp-check" @click="initBpVerify()">{{ state.bpCheckBtnText }}</button>
                     </div>
-                    <div class="signup-box" :class="signUpBoxClass">
+                    <div class="signup-box" :class="state.signUpBoxClass">
                         <div class="promote-text">
                             请填写账号信息
                         </div>
@@ -30,7 +30,7 @@
                         <button>注册</button>
                     </div>
                 </div>
-                <div class="login-box" :class="loginBoxClass">
+                <div class="login-box" :class="state.loginBoxClass">
                     <div class="little-prince">
                         <img src="../assets/img/prince.png" alt="">
                     </div>
@@ -51,75 +51,150 @@
 </template>
 
 <script>
-import { verifyBpCode } from "../api"
-import { defineComponent } from 'vue'
-import { mapMutations } from 'vuex';
+import { defineComponent, reactive, watch } from 'vue';
+import { useStore } from 'vuex';
+import { verifyBpCode } from "../api";
+import { mapMutations } from '../utils/map-state';
 import SpaceEmbed from './SpaceEmbed.vue';
 
 export default defineComponent({
     components: {
         SpaceEmbed
     },
-    data() {
-        return {
+    setup() {
+        const store = useStore();
+
+        const state = reactive({
             signUpBoxClass: '',
             bpBoxClass: '',
             registerBoxClass: '',
             loginBoxClass: 'slide-up',
-            showLogin: this.$store.state.showLogin,
+            showLogin: store.state.showLogin,
             bpCheckInputText: '邀请码',
             bpCheckBtnText: '验证',
             bpCode: ''
-        }
-    },
-    methods: {
-         ...mapMutations(['toggleLoginModal']),
+        });
 
-        initBpVerify() {
-            this.bpCheckBtnText = '验证中...';
-            if (this.bpCode != '') {
-                let data = {'passcode': this.bpCode};
+        watch(
+            () => store.state.showLogin,
+            (showLogin) => {
+                state.showLogin = showLogin;
+            }
+        );
+
+        const { toggleLoginModal } = mapMutations();
+
+        const initBpVerify = () => {
+            state.bpCheckBtnText = '验证中...';
+            if (state.bpCode != '') {
+
+                let data = {'passcode': state.bpCode};
 
                 verifyBpCode(data).then(res => {
                     console.log(res.data);
                     if (res.data.status) {
-                        this.signUpBoxClass = 'bp-toggle-on';
-                        this.bpBoxClass = 'bp-toggle-off';
-                        this.bpCheckBtnText = '验证';
+                        state.signUpBoxClass = 'bp-toggle-on';
+                        state.bpBoxClass = 'bp-toggle-off';
+                        state.bpCheckBtnText = '验证';
                     } else {
-                        this.bpCheckBtnText = '验证失败';
+                        state.bpCheckBtnText = '验证失败';
                     }
                 }).catch(e => {
                     console.log(e);
                 })
             } else {
-                this.bpCheckInputText = '请填写邀请码';
-                this.bpCheckBtnText = '验证';
+                state.bpCheckInputText = '请填写邀请码';
+                state.bpCheckBtnText = '验证';
             }
-        },
-        backToBpCard() {
-            this.signUpBoxClass = '';
-            this.bpBoxClass = '';
-            this.bpCheckBtnText = '验证';
-        },
-        showLoginCard() {
-            if (this.loginBoxClass == 'slide-up') {
-                this.registerBoxClass = 'slide-up';
-                this.loginBoxClass = '';
+        };
+
+        const backToBpCard = () => {
+            state.signUpBoxClass = '';
+            state.bpBoxClass = '';
+        };
+
+        const showLoginCard = () => {
+            if (state.loginBoxClass == 'slide-up') {
+                state.registerBoxClass = 'slide-up';
+                state.loginBoxClass = '';
             }
-        },
-        showRegisterCard() {
-            if (this.registerBoxClass == 'slide-up') {
-                this.loginBoxClass = 'slide-up';
-                this.registerBoxClass = '';
+        };
+
+        const showRegisterCard = () => {
+            if (state.registerBoxClass == 'slide-up') {
+                state.loginBoxClass = 'slide-up';
+                state.registerBoxClass = '';
             }
-        }
-    },
-    watch: {
-        '$store.state.showLogin'(newVal, oldVal) {
-            this.showLogin = newVal
+        };
+
+        return {
+            state,
+            toggleLoginModal,
+            initBpVerify,
+            backToBpCard,
+            showLoginCard,
+            showRegisterCard
         }
     }
+    // data() {
+    //     return {
+    //         signUpBoxClass: '',
+    //         bpBoxClass: '',
+    //         registerBoxClass: '',
+    //         loginBoxClass: 'slide-up',
+    //         showLogin: this.$store.state.showLogin,
+    //         bpCheckInputText: '邀请码',
+    //         bpCheckBtnText: '验证',
+    //         bpCode: ''
+    //     }
+    // },
+    // methods: {
+    //      ...mapMutations(['toggleLoginModal']),
+
+    //     initBpVerify() {
+    //         this.bpCheckBtnText = '验证中...';
+    //         if (this.bpCode != '') {
+    //             let data = {'passcode': this.bpCode};
+
+    //             verifyBpCode(data).then(res => {
+    //                 console.log(res.data);
+    //                 if (res.data.status) {
+    //                     this.signUpBoxClass = 'bp-toggle-on';
+    //                     this.bpBoxClass = 'bp-toggle-off';
+    //                     this.bpCheckBtnText = '验证';
+    //                 } else {
+    //                     this.bpCheckBtnText = '验证失败';
+    //                 }
+    //             }).catch(e => {
+    //                 console.log(e);
+    //             })
+    //         } else {
+    //             this.bpCheckInputText = '请填写邀请码';
+    //             this.bpCheckBtnText = '验证';
+    //         }
+    //     },
+    //     backToBpCard() {
+    //         this.signUpBoxClass = '';
+    //         this.bpBoxClass = '';
+    //     },
+    //     showLoginCard() {
+    //         if (this.loginBoxClass == 'slide-up') {
+    //             this.registerBoxClass = 'slide-up';
+    //             this.loginBoxClass = '';
+    //         }
+    //     },
+    //     showRegisterCard() {
+    //         if (this.registerBoxClass == 'slide-up') {
+    //             this.loginBoxClass = 'slide-up';
+    //             this.registerBoxClass = '';
+    //         }
+    //     }
+    // },
+    // watch: {
+    //     '$store.state.showLogin'(newVal, oldVal) {
+    //         this.showLogin = newVal
+    //     }
+    // }
 })
 </script>
 
