@@ -39,10 +39,10 @@
                             <span>已有账号，去</span>登录
                         </h2>
                         <div class="input-box">
-                            <input type="text" placeholder="用户名" v-model="state.username">
-                            <input type="password" placeholder="密码" v-model="state.password">
+                            <input type="text" :placeholder="state.loginUsernameInputText" v-model="state.username">
+                            <input type="password" :placeholder="state.loginPasswordInputText" v-model="state.password" @keyup.enter="handleLogin()">
                         </div>
-                        <button>{{ state.loginBtnText }}</button>
+                        <button @click="handleLogin()">{{ state.loginBtnText }}</button>
                     </div>
                 </div>
             </div>
@@ -76,6 +76,8 @@ export default defineComponent({
             bpCheckBtnText: '验证',
             registerInputText: '用户名',
             registerBtnText: '注册',
+            loginUsernameInputText: '用户名',
+            loginPasswordInputText: '密码',
             loginBtnText: '登录',
             bpCode: '',
             pendingCode: '',
@@ -93,7 +95,7 @@ export default defineComponent({
             }
         );
 
-        const { toggleLoginModal } = mapMutations();
+        const { toggleLoginModal, login } = mapMutations();
 
         const handleBpVerify = () => {
             state.bpCheckBtnText = '验证中...';
@@ -198,6 +200,67 @@ export default defineComponent({
             })
         }
 
+        const handleLogin = () => {
+            state.loginBtnText = '登录中...';
+
+            if (state.username == '') {
+                state.loginBtnText= '登录';
+                proxy.$toast('请填写用户名', 'warning', 2000);
+                return false;
+            };
+            if (state.password == '') {
+                state.loginBtnText = '登录';
+                proxy.$toast('请填写密码', 'warning', 2000);
+                return false;
+            };
+
+            let loginData = {
+                'username': state.username,
+                'password': state.password,
+            }
+
+            userLogin(loginData).then(res => {
+                console.log(res.data);
+                if (res.data.status) {
+                    state.username = '';
+                    state.password = '';
+                    state.loginUsernameInputText = '用户名';
+                    state.loginPasswordInputText = '密码';
+                    state.loginBtnText= '登录';
+                    const loginInfo = {
+                        'token': res.data.token,
+                        'userInfo': res.data.userInfo,
+                    }
+                    login(loginInfo);
+                    proxy.$toast('欢迎降落在B612', 'success', 2000);
+                    toggleLoginModal(state.showLogin);
+                } else {
+                    switch(res.data.code) {
+                        case 401:
+                            state.username = '';
+                            state.password = '';
+                            state.loginBtnText= '登录';
+                            proxy.$toast('登录信息缺失', 'error', 2000);
+                            break;
+                        case 402:
+                            state.username = '';
+                            state.password = '';
+                            state.loginUsernameInputText = '请重新填写用户名';
+                            state.loginBtnText= '登录';
+                            proxy.$toast('用户名不存在', 'error', 2000);
+                            break;
+                        case 403:
+                            state.password = '';
+                            state.loginPasswordInputText = '请重新填写密码';
+                            state.loginBtnText= '登录';
+                            proxy.$toast('密码错误', 'error', 2000);
+                    }
+                }
+            }).catch(e => {
+                console.log(e);
+            })
+        }
+
         const backToBpCard = () => {
             state.signUpBoxClass = '';
             state.bpBoxClass = '';
@@ -222,6 +285,7 @@ export default defineComponent({
             toggleLoginModal,
             handleBpVerify,
             handleRegister,
+            handleLogin,
             backToBpCard,
             showLoginCard,
             showRegisterCard

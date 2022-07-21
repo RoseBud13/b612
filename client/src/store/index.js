@@ -1,4 +1,5 @@
 import {createStore} from 'vuex'
+import { setAuthToken, getAuthToken, setAuthUserInfo, getAuthUserInfo, removeAuthToken, removeAuthUserInfo } from '../utils/auth'
 
 export default createStore({
     state: {
@@ -9,6 +10,8 @@ export default createStore({
         showDashboard: false,
         isHomeThemeWithPic: true,
         showLogin: false,
+        authToken: getAuthToken(),
+        userInfo: getAuthUserInfo(), // uid avatar username name
         continent:
         {
             name: '欢迎来到B612星球',
@@ -152,6 +155,18 @@ export default createStore({
             } else {
                 state.showLogin = false
             }
+        },
+        login(state, data) {
+            setAuthToken(data.token);
+            setAuthUserInfo(data.userInfo);
+            state.authToken = data.token;
+            state.userInfo = data.userInfo;
+        },
+        logout(state) {
+            state.authToken = null;
+            state.userInfo = null;
+            removeAuthToken();
+            removeAuthUserInfo();
         }
     },
     getters: {

@@ -166,13 +166,13 @@ def login():
 
     if not username or not password:
         # returns 401 if any username or / and password is missing
-        return jsonify({'message': 'Credentials required', 'authenticated': False}), 401
+        return jsonify({'status': False, 'code': 401, 'message': 'Credentials required'})
 
     user = User.objects(username=username).first()
 
     if not user:
         # returns 401 if the user not exists
-        return jsonify({'message': 'User not found', 'authenticated': False}), 401
+        return jsonify({'status': False, 'code': 402, 'message': 'User not found'})
 
     if check_password_hash(user.password_hash, password):
         # generates the JWT Token
@@ -183,10 +183,10 @@ def login():
             'exp': datetime.utcnow() + timedelta(hours=72)
         }, current_app.config['SECRET_KEY'], algorithm="HS256"),
         print(Tools.tuple_to_str(token))
-        return jsonify({'token': Tools.tuple_to_str(token), 'username': user.username, 'uid': user.uid}), 200
+        return jsonify({'status': True, 'code': 200, 'token': Tools.tuple_to_str(token), 'userInfo': {'username': user.username, 'uid': user.uid, 'avatar': user.avatar_url, 'name': user.name}})
 
     # returns 403 if password is wrong
-    return jsonify({'message': 'Invalid credentials', 'authenticated': False}), 403
+    return jsonify({'status': False, 'code': 403, 'message': 'Invalid credentials'})
 
 
 # Authentication
