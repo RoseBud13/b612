@@ -14,13 +14,13 @@ export const storage = {
     },
     getAuthUserInfo() {
         let userInfoStr = localStorage.getItem(UserInfoKey);
-        return userInfoStr ? JSON.parse(localStorage.getItem(UserInfoKey)) : null;
+        return userInfoStr ? JSON.parse(localStorage.getItem(UserInfoKey)) : {'user-info': {'avatar': ''}};
     },
     setAuthUserInfo(userInfo) {
         return localStorage.setItem(UserInfoKey, JSON.stringify(userInfo));
     },
     removeAuthUserInfo() {
-        return localStorageStorage.removeItem(UserInfoKey);
+        return localStorage.removeItem(UserInfoKey);
     },
     getLocalSettingInfo() {
         let localSettingInfoStr = localStorage.getItem(LocalSettingInfoKey);
@@ -30,6 +30,6 @@ export const storage = {
         return localStorage.setItem(LocalSettingInfoKey, JSON.stringify(localSettingInfo));
     },
     removeLocalSettingInfo() {
-        return localStorageStorage.removeItem(LocalSettingInfoKey);
+        return localStorage.removeItem(LocalSettingInfoKey);
     }
 }
