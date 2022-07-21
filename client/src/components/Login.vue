@@ -13,21 +13,21 @@
                             欢迎注册B612
                         </div>
                         <div class="input-box">
-                            <input type="text" :placeholder="state.bpCheckInputText" v-model="state.bpCode" @keyup.enter="initBpVerify()">
+                            <input type="text" :placeholder="state.bpCheckInputText" v-model="state.bpCode" @keyup.enter="handleBpVerify()">
                         </div>
-                        <button id="bp-check" @click="initBpVerify()">{{ state.bpCheckBtnText }}</button>
+                        <button id="bp-check" @click="handleBpVerify()">{{ state.bpCheckBtnText }}</button>
                     </div>
                     <div class="signup-box" :class="state.signUpBoxClass">
                         <div class="promote-text">
                             请填写账号信息
                         </div>
                         <div class="input-box">
-                            <input type="text" placeholder="用户名">
-                            <input type="password" placeholder="密码">
-                            <input type="password" placeholder="确认密码">
+                            <input type="text" :placeholder="state.registerInputText" v-model="state.newUsername">
+                            <input type="password" placeholder="密码" v-model="state.newPassword">
+                            <input type="password" placeholder="确认密码" v-model="state.checkPassword" @keyup.enter="handleRegister()">
                         </div>
                         <div class="bp-back" @click="backToBpCard()">返回</div>
-                        <button>注册</button>
+                        <button @click="handleRegister()">{{ state.registerBtnText }}</button>
                     </div>
                 </div>
                 <div class="login-box" :class="state.loginBoxClass">
@@ -39,10 +39,10 @@
                             <span>已有账号，去</span>登录
                         </h2>
                         <div class="input-box">
-                            <input type="text" placeholder="用户名">
-                            <input type="password" placeholder="密码">
+                            <input type="text" placeholder="用户名" v-model="state.username">
+                            <input type="password" placeholder="密码" v-model="state.password">
                         </div>
-                        <button>登录</button>
+                        <button>{{ state.loginBtnText }}</button>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
 <script>
 import { defineComponent, reactive, watch, getCurrentInstance } from 'vue';
 import { useStore } from 'vuex';
-import { verifyBpCode } from "../api";
+import { verifyBpCode, userRegister, userLogin } from "../api";
 import { mapMutations } from '../utils/map-state';
 import SpaceEmbed from './SpaceEmbed.vue';
 
@@ -74,7 +74,16 @@ export default defineComponent({
             showLogin: store.state.showLogin,
             bpCheckInputText: '邀请码',
             bpCheckBtnText: '验证',
-            bpCode: ''
+            registerInputText: '用户名',
+            registerBtnText: '注册',
+            loginBtnText: '登录',
+            bpCode: '',
+            pendingCode: '',
+            newUsername: '',
+            newPassword: '',
+            checkPassword: '',
+            username: '',
+            password: ''
         });
 
         watch(
@@ -86,16 +95,17 @@ export default defineComponent({
 
         const { toggleLoginModal } = mapMutations();
 
-        const initBpVerify = () => {
+        const handleBpVerify = () => {
             state.bpCheckBtnText = '验证中...';
             if (state.bpCode != '') {
                 let data = {'passcode': state.bpCode};
                 verifyBpCode(data).then(res => {
                     console.log(res.data);
                     if (res.data.status) {
+                        state.bpCode = '';
+                        state.pendingCode = res.data.pending_code;
                         state.signUpBoxClass = 'bp-toggle-on';
                         state.bpBoxClass = 'bp-toggle-off';
-                        state.bpCode = '';
                         state.bpCheckInputText = '邀请码';
                         state.bpCheckBtnText = '验证';
                         proxy.$toast('验证成功', 'success', 2000);
@@ -114,6 +124,79 @@ export default defineComponent({
                 proxy.$toast('邀请码不能为空', 'warning', 2000);
             }
         };
+
+        const handleRegister = () => {
+            state.registerBtnText = '注册中...';
+
+            if (state.newUsername == '') {
+                state.registerBtnText = '注册';
+                proxy.$toast('用户名不能为空', 'warning', 2000);
+                return false;
+            };
+            if (state.newPassword.trim().length < 6) {
+                state.newPassword = '';
+                state.checkPassword = '';
+                state.registerBtnText = '注册';
+                proxy.$toast('密码长度不能小于6位', 'warning', 2000);
+                return false;
+            };
+            if (state.newPassword != state.checkPassword ) {
+                state.newPassword = '';
+                state.checkPassword = '';
+                state.registerBtnText = '注册';
+                proxy.$toast('密码不一致', 'warning', 2000);
+                return false;
+            }
+
+            let newUser = {
+                'pending_code': state.pendingCode,
+                'username': state.newUsername,
+                'password': state.newPassword,
+                'email': '',
+                'name': ''
+            }
+
+            userRegister(newUser).then(res => {
+                console.log(res.data);
+                if (res.data.status) {
+                    state.pendingCode = '';
+                    state.newUsername = '';
+                    state.newPassword = '';
+                    state.checkPassword = '';
+                    state.registerBtnText = '注册';
+                    proxy.$toast('欢迎加入B612', 'success', 2000);
+                    showLoginCard();
+                } else {
+                    switch(res.data.code) {
+                        case 403:
+                            state.pendingCode = '';
+                            state.newUsername = '';
+                            state.newPassword = '';
+                            state.checkPassword = '';
+                            state.registerBtnText = '注册';
+                            proxy.$toast('邀请码无效', 'error', 2000);
+                            backToBpCard();
+                            break;
+                        case 406:
+                            state.newUsername = '';
+                            state.newPassword = '';
+                            state.checkPassword = '';
+                            state.registerBtnText = '注册';
+                            proxy.$toast('填入内容无效', 'error', 2000);
+                            break;
+                        case 409:
+                            state.newUsername = '';
+                            state.newPassword = '';
+                            state.checkPassword = '';
+                            state.registerInputText = '请重新填写用户名';
+                            state.registerBtnText = '注册';
+                            proxy.$toast('用户名已被使用', 'error', 2000);
+                    }
+                }
+            }).catch(e => {
+                console.log(e);
+            })
+        }
 
         const backToBpCard = () => {
             state.signUpBoxClass = '';
@@ -137,7 +220,8 @@ export default defineComponent({
         return {
             state,
             toggleLoginModal,
-            initBpVerify,
+            handleBpVerify,
+            handleRegister,
             backToBpCard,
             showLoginCard,
             showRegisterCard

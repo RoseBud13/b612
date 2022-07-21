@@ -24,6 +24,22 @@ export function verifyBpCode(data) {
     })
 }
 
+export function userRegister(data) {
+    return server({
+        method: 'post',
+        url: 'api/register-user',
+        data
+    })
+}
+
+export function userLogin(data) {
+    return server({
+        method: 'post',
+        url: 'api/login',
+        data
+    })
+}
+
 export function getPosts() {
     return server({
         method: 'get',

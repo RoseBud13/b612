@@ -88,27 +88,27 @@ def register_user():
 
     if check_bp_pencode(pencode):
 
-        new_email = data['email']
+        new_email = data['email'] if data['email'] else 'unset_' + Tools.gen_random_code(6) + '@test.com'
         new_username = data['username']
         new_password = data['password']
-        new_name = data['name']
+        new_name = data['name'] if data['name'] else 'unset_' + Tools.gen_random_code(6)
 
 
         if not new_email or not new_username or not new_password or not new_name:
-            return jsonify({'message': 'Please fill the needed info'}), 406
+            return jsonify({'status': False, 'code': 406, 'message': 'Please fill the needed info'})
 
         check_email = User.objects(email=new_email).first()
         check_username = User.objects(username=new_username).first()
 
         if check_email and check_username:
             # returns 409 if email and username exist
-            return jsonify({'message': 'Email and username already used'}), 409
+            return jsonify({'status': False, 'code': 409, 'message': 'Email and username already used'})
         elif check_email:
             # returns 409 if email exists
-            return jsonify({'message': 'Email already used'}), 409
+            return jsonify({'status': False, 'code': 409, 'message': 'Email already used'})
         elif check_username:
             # returns 409 if username exists
-            return jsonify({'message': 'Username already used'}), 409
+            return jsonify({'status': False, 'code': 409, 'message': 'Username already used'})
         
         new_uid = 'B612' + Tools.gen_random_code(8)
         data['uid'] = new_uid
@@ -122,6 +122,8 @@ def register_user():
 
         del data['pending_code']
         del data['password']
+        data['email'] = new_email
+        data['name'] = new_name
         print(data)
         
         new_user = User(**data)
@@ -130,10 +132,13 @@ def register_user():
 
         pb_result, pb_msg = dump_boarding_pass(pencode, new_uid)
         print(pb_msg)
-        
-        return jsonify(new_user.to_dict()), 201
+
+        if pb_result:
+            return jsonify({'status': True, 'code': 201, 'data': new_user.to_dict()})
+        else:
+            return jsonify({'status': False, 'code': 403, 'message': 'Boarding pass pending code invalid'})
     else:
-        return jsonify({'message': 'Boarding pass pending code invalid'}), 403
+        return jsonify({'status': False, 'code': 403, 'message': 'Boarding pass pending code invalid'})
 
 
 # -------------------------------------- Login & Authentication---------------------------------
