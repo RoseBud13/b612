@@ -1,5 +1,5 @@
 import {createStore} from 'vuex'
-import { setAuthToken, getAuthToken, setAuthUserInfo, getAuthUserInfo, removeAuthToken, removeAuthUserInfo } from '../utils/auth'
+import { storage } from '../utils/storage'
 
 export default createStore({
     state: {
@@ -10,8 +10,9 @@ export default createStore({
         showDashboard: false,
         isHomeThemeWithPic: true,
         showLogin: false,
-        authToken: getAuthToken(),
-        userInfo: getAuthUserInfo(), // uid avatar username name
+        authToken: storage.getAuthToken(),
+        userInfo: storage.getAuthUserInfo(), // uid avatar username name
+        localSettingInfo: storage.getLocalSettingInfo(),
         continent:
         {
             name: '欢迎来到B612星球',
@@ -157,16 +158,19 @@ export default createStore({
             }
         },
         login(state, data) {
-            setAuthToken(data.token);
-            setAuthUserInfo(data.userInfo);
+            const localSetting = ['loggedIn'];
+            state.localSettingInfo = localSetting;
+            storage.setLocalSettingInfo(localSetting);
             state.authToken = data.token;
             state.userInfo = data.userInfo;
+            storage.setAuthToken(data.token);
+            storage.setAuthUserInfo(data.userInfo);
         },
         logout(state) {
             state.authToken = null;
             state.userInfo = null;
-            removeAuthToken();
-            removeAuthUserInfo();
+            storage.removeAuthToken();
+            storage.removeAuthUserInfo();
         }
     },
     getters: {

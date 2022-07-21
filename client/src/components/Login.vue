@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, watch, getCurrentInstance } from 'vue';
+import { defineComponent, reactive, watch, getCurrentInstance, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { verifyBpCode, userRegister, userLogin } from "../api";
 import { mapMutations } from '../utils/map-state';
@@ -70,7 +70,7 @@ export default defineComponent({
             signUpBoxClass: '',
             bpBoxClass: '',
             registerBoxClass: '',
-            loginBoxClass: 'slide-up',
+            loginBoxClass: '',
             showLogin: store.state.showLogin,
             bpCheckInputText: '邀请码',
             bpCheckBtnText: '验证',
@@ -94,6 +94,18 @@ export default defineComponent({
                 state.showLogin = showLogin;
             }
         );
+
+        onMounted(() => {
+            const localSetting = store.state.localSettingInfo;
+            console.log(localSetting);
+            if (localSetting && localSetting.includes('loggedIn')) {
+                state.registerBoxClass = 'slide-up';
+                state.loginBoxClass = '';
+            } else {
+                state.registerBoxClass = '';
+                state.loginBoxClass = 'slide-up';
+            }
+        });
 
         const { toggleLoginModal, login } = mapMutations();
 
