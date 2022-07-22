@@ -14,7 +14,7 @@ export const storage = {
     },
     getAuthUserInfo() {
         let userInfoStr = localStorage.getItem(UserInfoKey);
-        return userInfoStr ? JSON.parse(localStorage.getItem(UserInfoKey)) : {'user-info': {'avatar': ''}};
+        return userInfoStr ? JSON.parse(localStorage.getItem(UserInfoKey)) : {'user-info': {'avatar': '', 'name': '', 'uid': '', 'username': ''}};
     },
     setAuthUserInfo(userInfo) {
         return localStorage.setItem(UserInfoKey, JSON.stringify(userInfo));
