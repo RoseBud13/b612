@@ -1,6 +1,6 @@
 <template>
     <div class="port">
-        <div class="port-btn" @click="$emit('goTo')" v-show="this.$route.meta.showPort || this.show === 'show' ">
+        <div class="port-btn" @click="$emit('goTo')" v-show="this.$route.meta.showPortOnMobile || this.show === 'show' ">
             <!-- <ion-icon name="planet-outline"></ion-icon> -->
             <img src="../assets/img/planet-outline.svg" alt="planet">
         </div>

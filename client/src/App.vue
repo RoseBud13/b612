@@ -16,20 +16,22 @@ export default defineComponent({
 		const { proxy } = getCurrentInstance();
 
 		onMounted(() => {
-            const userName = store.state.userInfo.name;
+			const userName = store.state.userInfo.name;
+			const userUsername = store.state.userInfo.username;
             if (userName && userName.startsWith('unset_')) {
-				console.log(userName);
-                router.push({name: 'user'});
+				// console.log(userName);
+				// console.log(userUsername);
+                router.push({name: 'user', params: { username: userUsername }});
 				proxy.$toast('请完善昵称和邮箱', 'warning', 5000);
             }
         });
 
 		watch(
-			() => store.state.userInfo.name,
-			(userName) => {
-				if (userName && userName.startsWith('unset_')) {
-					console.log(userName);
-					router.push({name: 'user'});
+			() => [store.state.userInfo.name, store.state.userInfo.username],
+			(data) => {
+				if (data[0] && data[0].startsWith('unset_')) {
+					// console.log(data[0]);
+					router.push({name: 'user', params: { username: data[1] }});
 					proxy.$toast('请完善昵称和邮箱', 'warning', 5000);
 				}
 			}
