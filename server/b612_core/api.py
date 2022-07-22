@@ -190,7 +190,7 @@ def login():
 
 
 # Authentication
-def login_required(f):
+def auth_required(f):
     @wraps(f)
     def _verify(*args, **kwargs):
         """This decorator function is used to check if the credential token is included
@@ -246,7 +246,7 @@ def login_required(f):
 
 
 @api.route('/users', methods=['GET'])
-@login_required
+@auth_required
 def get_all_users(current_user, current_user_role):
     """Get all users stored in the database
 
@@ -282,6 +282,35 @@ def get_all_users(current_user, current_user_role):
         return jsonify({'users': [u.to_dict() for u in users]})
     else:
         return jsonify({'message': 'Access denied. Superadmin required.', 'authenticated': False}), 401
+
+
+@api.route('/user/<uid>', methods=['GET', 'PUT'])
+@auth_required
+def get_update_user(current_user, current_user_role, uid):
+    user = User.objects(uid=uid).first()
+
+    if not user:
+        return jsonify({'status': False, 'code': 402, 'message': 'User not found'})
+
+    if request.method == 'GET':
+        return jsonify({'status': True, 'code': 200, 'data': {'user': user.to_dict()}})
+    
+    elif request.method == 'PUT':
+        data = request.get_json(force=True)
+        print(data)
+        if 'superadmin' in current_user_role:
+            user.update(**data)
+            updatedUser = User.objects(uid=uid).first()
+            return jsonify({'status': True, 'code': 200, 'data': {'user': updatedUser.to_dict()}})
+        elif 'uid' not in data and 'user_type' not in data and 'created_at' not in data and 'password_hash' not in data:
+            if current_user == uid:
+                user.update(**data)
+                updatedUser = User.objects(uid=uid).first()
+                return jsonify({'status': True, 'code': 200, 'data': {'user': updatedUser.to_dict()}})
+            else:
+                return jsonify({'status': False, 'code': 401, 'message': 'Access denied. Not current user.'})  
+        else:
+            return jsonify({'status': False, 'code': 401, 'message': 'Access denied. Superadmin required.'})
 
 
 @api.route('/posts', methods=['GET'])
