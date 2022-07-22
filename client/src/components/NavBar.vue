@@ -5,12 +5,15 @@
                 <port @goTo="toUniverse"></port>
             </div>
             <div class="nav-bar-mid">
-                <div class="clock-box" @click="toggleDashboard(this.dashboard)">
+                <div v-if="$route.name == 'home'" class="clock-box" @click="toggleDashboard(this.dashboard)" style="cursor: pointer;">
+                    <clock :blink="true" :displaySeconds="false" :twelveHour="false"></clock>
+                </div>
+                <div v-else class="clock-box" >
                     <clock :blink="true" :displaySeconds="false" :twelveHour="false"></clock>
                 </div>
             </div>
             <div class="nav-bar-right" :class="[theme]">
-                <div class="menu-item">
+                <div v-if="$route.name == 'home'" class="menu-item">
                     <div class="menu-btn">
                         <i class="fas fa-cog"></i>
                     </div>
@@ -25,6 +28,13 @@
                         </li>
                     </ul>
                 </div>
+                <div v-else class="menu-item">
+                    <div class="menu-btn">
+                        <router-link to="/">
+                            <i class="fas fa-home"></i>
+                        </router-link>
+                    </div>
+                </div>
                 <div class="menu-item">
                     <div class="menu-btn" v-if="!this.$store.state.authToken" @click="toggleLoginModal(this.showLogin)">
                         <i class="fas fa-user-circle"></i>
@@ -37,8 +47,8 @@
                             width="30"
                         />
                         <ul class="menu-subitems">
-                            <li>
-                                <router-link to="/">
+                            <li v-if="$route.name != 'user'">
+                                <router-link :to="this.userPageUrl">
                                     <i class="fas fa-user-circle"> 
                                         <p>个人中心</p>
                                     </i>
@@ -77,7 +87,8 @@ export default defineComponent({
             theme: this.$store.state.homeTheme,
             themeWithPic: this.$store.state.isHomeThemeWithPic,
             showLogin: this.$store.state.showLogin,
-            userAvatarUrl: this.$store.state.userInfo.avatar? this.$store.state.userInfo.avatar : 'https://b612-static-rsrcs-1306125602.cos.ap-shanghai.myqcloud.com/user-avatar%2Fdefault-avatar.png'
+            userAvatarUrl: this.$store.state.userInfo.avatar? this.$store.state.userInfo.avatar : 'https://b612-static-rsrcs-1306125602.cos.ap-shanghai.myqcloud.com/user-avatar%2Fdefault-avatar.png',
+            userPageUrl: '/user/' + this.$store.state.userInfo.username
         }
     },
     methods: {
@@ -89,6 +100,10 @@ export default defineComponent({
         handleLogout() {
             this.logout();
             this.$toast('已驶离B612', 'success', 2000);
+            setTimeout(() => {
+                this.$router.push({name: "home"});
+                location.reload();
+            }, 1000)
         }
     },
     watch: {

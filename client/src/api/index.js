@@ -40,6 +40,23 @@ export function userLogin(data) {
     })
 }
 
+export function getUser(uid, token) {
+    return server({
+        method: 'get',
+        url: `api/user/${uid}`,
+        headers: {Authorization: token}
+    })
+}
+
+export function updateUser(uid, token, data) {
+    return server({
+        method: 'put',
+        url: `api/user/${uid}`,
+        headers: {Authorization: token},
+        data
+    })
+}
+
 export function getPosts() {
     return server({
         method: 'get',
