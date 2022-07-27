@@ -97,7 +97,7 @@ export default defineComponent({
 
         onMounted(() => {
             const localSetting = store.state.localSettingInfo;
-            console.log(localSetting);
+            // console.log(localSetting);
             if (localSetting && localSetting.includes('loggedIn')) {
                 state.registerBoxClass = 'slide-up';
                 state.loginBoxClass = '';

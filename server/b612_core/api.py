@@ -183,7 +183,7 @@ def login():
             'exp': datetime.utcnow() + timedelta(hours=72)
         }, current_app.config['SECRET_KEY'], algorithm="HS256"),
         print(Tools.tuple_to_str(token))
-        return jsonify({'status': True, 'code': 200, 'token': Tools.tuple_to_str(token), 'userInfo': {'username': user.username, 'uid': user.uid, 'avatar': user.avatar_url, 'name': user.name}})
+        return jsonify({'status': True, 'code': 200, 'token': Tools.tuple_to_str(token), 'userInfo': {'username': user.username, 'uid': user.uid, 'avatar': user.avatar_url, 'name': user.name, 'email': user.email}})
 
     # returns 403 if password is wrong
     return jsonify({'status': False, 'code': 403, 'message': 'Invalid credentials'})
@@ -293,20 +293,25 @@ def get_update_user(current_user, current_user_role, uid):
         return jsonify({'status': False, 'code': 402, 'message': 'User not found'})
 
     if request.method == 'GET':
-        return jsonify({'status': True, 'code': 200, 'data': {'user': user.to_dict()}})
+        return jsonify({'status': True, 'code': 200, 'user': user.to_dict_protected()})
     
     elif request.method == 'PUT':
         data = request.get_json(force=True)
-        print(data)
+
+        if 'email' in data:
+            check_email = User.objects(email=data['email']).first()
+            if check_email:
+                return jsonify({'status': False, 'code': 409, 'message': 'Email already used'})
+        
         if 'superadmin' in current_user_role:
             user.update(**data)
             updatedUser = User.objects(uid=uid).first()
-            return jsonify({'status': True, 'code': 200, 'data': {'user': updatedUser.to_dict()}})
+            return jsonify({'status': True, 'code': 200, 'user': updatedUser.to_dict_protected()})
         elif 'uid' not in data and 'user_type' not in data and 'created_at' not in data and 'password_hash' not in data:
             if current_user == uid:
                 user.update(**data)
                 updatedUser = User.objects(uid=uid).first()
-                return jsonify({'status': True, 'code': 200, 'data': {'user': updatedUser.to_dict()}})
+                return jsonify({'status': True, 'code': 200, 'user': updatedUser.to_dict_protected()})
             else:
                 return jsonify({'status': False, 'code': 401, 'message': 'Access denied. Not current user.'})  
         else:

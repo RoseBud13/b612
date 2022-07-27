@@ -126,6 +126,9 @@ export default defineComponent({
         },
         '$store.state.showLogin'(newVal, oldVal) {
             this.showLogin = newVal
+        },
+        '$store.state.userInfo'(newVal, oldVal) {
+            this.userPageUrl = '/user/' + newVal.username
         }
     }
 })

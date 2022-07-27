@@ -86,10 +86,20 @@ class User(db.DynamicDocument):
                     username = self.username,
                     password = self.password_hash,
                     name = self.name,
-                    profile_text = self.profile,
+                    profile = self.profile,
                     avatar_url = self.avatar_url,
                     birthday = convert_utc_to_local(self.birthday),
                     user_type = self.user_type,
+                    created_at = convert_utc_to_local(self.created_at))
+
+    def to_dict_protected(self):
+        return dict(uid = self.uid,
+                    email = self.email,
+                    username = self.username,
+                    name = self.name,
+                    profile = self.profile,
+                    avatar_url = self.avatar_url,
+                    birthday = convert_utc_to_local(self.birthday),
                     created_at = convert_utc_to_local(self.created_at))
 
 

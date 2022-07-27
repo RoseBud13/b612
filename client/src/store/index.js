@@ -171,7 +171,11 @@ export default createStore({
             state.userInfo = null;
             storage.removeAuthToken();
             storage.removeAuthUserInfo();
-        }
+        },
+        updateUserInfo(state, data) {
+            state.userInfo = data;
+            storage.setAuthUserInfo(data);
+        },
     },
     getters: {
         todayTasks (state) {

@@ -40,19 +40,19 @@ export function userLogin(data) {
     })
 }
 
-export function getUser(uid, token) {
+export function getUser(uid) {
     return server({
         method: 'get',
         url: `api/user/${uid}`,
-        headers: {Authorization: token}
+        // headers: {Authorization: token}
     })
 }
 
-export function updateUser(uid, token, data) {
+export function updateUser(uid, data) {
     return server({
         method: 'put',
         url: `api/user/${uid}`,
-        headers: {Authorization: token},
+        // headers: {Authorization: token},
         data
     })
 }
