@@ -9,7 +9,7 @@
                     <div class="daily-update" :class="[theme]">
                         <div class="quote-content">
                             <div class="quote-text">{{ dailyQuote }}</div>
-                            <div class="quote-info">{{ quoteInfo }}</div>
+                            <div class="quote-info">{{ quoteAuthor }}</div>
                         </div>
                         <div class="weather-report">
                             <div class="weather-date">{{ dateText }}</div>
@@ -86,7 +86,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { getOneQuote } from "../api"
+import { getOneSummary } from "../api"
 import LittleFox from "../components/LittleFox.vue"
 import MiniSlider from "../components/MiniSlider.vue"
 import PostDeck from './PostDeck.vue'
@@ -108,7 +108,7 @@ export default defineComponent({
             showDashboard: this.$store.state.showDashboard,
             theme: this.$store.state.homeTheme,
             dailyQuote: '',
-            quoteInfo: '',
+            quoteAuthor: '',
             dateText: '',
             weatherText: '',
             dailyPicUrl: '',
@@ -126,13 +126,13 @@ export default defineComponent({
         },
     },
     methods: {
-        getDailyQuote() {
-            getOneQuote().then(res => {
+        getDailySum() {
+            getOneSummary().then(res => {
                 this.dailyQuote = res.data.data.content_list[0].forward
-                this.quoteInfo = '—— ' + res.data.data.content_list[0].words_info
+                this.quoteAuthor = '—— ' + res.data.data.content_list[0].words_info
                 this.dateText = res.data.data.weather.date.slice(0,4) + '年' + res.data.data.weather.date.slice(5,7) + '月' + res.data.data.weather.date.slice(8) + '日'
                 this.weatherText = res.data.data.weather.city_name + ' ' + '平流层 ' + ' 温度 ' + '-57.15°C'
-                this.dailyPicUrl = 'https://b612.one/daily/img/' + res.data.data.content_list[0].img_url.slice(27)
+                this.dailyPicUrl = 'https://b612.one/oneapi/img/' + res.data.data.content_list[0].img_url.slice(27)
                 console.log(this.dailyQuote)
             }).catch(e => {
                 console.log(e)
@@ -160,7 +160,7 @@ export default defineComponent({
         // }
     },
     mounted() {
-        this.getDailyQuote()
+        this.getDailySum()
         this.setWidgetsShow()
         // this.getDeviceHeight()
     }
@@ -419,6 +419,7 @@ input[type="radio"] {
     justify-content: center;
     align-items: center;
     font-size: 2rem;
+    cursor: pointer;
 }
 .app-window-view-controls label i {
     color: #23373d;

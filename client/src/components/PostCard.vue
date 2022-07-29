@@ -101,7 +101,7 @@ export default defineComponent({
 }
 .content img {
     margin: 2rem 0;
-    width: 70%;
+    width: 100%;
 }
 
 .card-footer {

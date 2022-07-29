@@ -1,11 +1,18 @@
 import request from '../utils/request'
 import server from '../utils/server'
 
-export function getOneQuote() {
+export function getOneSummary() {
     return request({
         method: 'get',
         url: 'oneapi/'
         // url: '/channel/one/0/0'
+    })
+}
+
+export function getOneArticle(essayId) {
+    return request({
+        method: 'get',
+        url: `oneapi/essay/${essayId}`
     })
 }
 
