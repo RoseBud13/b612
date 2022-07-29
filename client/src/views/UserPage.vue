@@ -179,12 +179,12 @@ export default defineComponent({
             updateUser(current_uid, newData).then(res => {
                 console.log(res.data);
                 if (res.data.status) {
-                    state.userEmail = state.newEmail;
-                    state.userName = state.newName;
-                    state.userProfile = state.newProfile;
-                    state.editBtnText = '保存';
+                    state.userEmail = res.data.user.email;
+                    state.userName = res.data.user.name;
+                    state.userProfile = res.data.user.profile;
                     const newUserInfo = res.data.user;
                     updateUserInfo(newUserInfo);
+                    state.editBtnText = '保存';
                     proxy.$toast('信息修改成功', 'success', 2000);
                     toggleEdit('all');
                 } else {
@@ -288,7 +288,7 @@ export default defineComponent({
 .table-row {
     width: 100%;
     min-height: 50px;
-    padding: 30px 0 20px 10px;
+    padding: 30px 0 20px 0;
 }
 
 .row-name {
@@ -310,6 +310,10 @@ export default defineComponent({
 
 .row-data {
     margin-top: 10px;
+}
+
+.row-data p {
+    height: 38px;
 }
 
 .row-data input {
@@ -335,11 +339,13 @@ export default defineComponent({
     text-indent: 15px;
     outline: none;
     resize: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+		Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .save-data-btn {
     width: 70%;
-    padding: 0 0 20px 10px;
+    padding: 0 0 20px 0;
     text-align: center;
 }
 
@@ -347,7 +353,7 @@ export default defineComponent({
     width: 100%;
     padding: 13px 45px;
     margin: 15px 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: #75a297;
     border: none;
     border-radius: 15px;
     color: rgba(0,0,0,0.8);
@@ -362,5 +368,61 @@ export default defineComponent({
 .save-data-btn button:hover {
     background-color: rgb(95, 140, 128);
     color: rgba(255,255,255,0.8);
+}
+
+@media (max-width: 820px) {
+    .login-card {
+        width: 550px;
+    }
+
+    .info-area {
+        flex: 2;
+    }
+
+    .table-area {
+        flex: 3;
+    }
+}
+@media (max-width: 600px) {
+    .login-card {
+        width: 80%;
+        height: fit-content;
+        flex-direction: column;
+    }
+
+    .info-area {
+        flex: 2;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 0;
+    }
+
+    .avatar-box {
+        width: 60%;
+    }
+
+    .table-area {
+        flex: 3;
+    }
+
+    .table-row {
+        width: 80%;
+        min-height: 50px;
+        padding: 30px 30px 20px 30px;
+    }
+
+    .row-name {
+        width: 100%;
+    }
+
+    .row-data input,
+    .row-data textarea {
+        width: 100%;
+    }
+
+    .save-data-btn {
+        width: 80%;
+        padding: 0 30px 20px 30px;
+    }
 }
 </style>

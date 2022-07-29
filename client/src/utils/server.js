@@ -3,7 +3,8 @@ import { storage } from '../utils/storage'
 
 const server = axios.create({
     // development mode
-    baseURL: 'http://127.0.0.1:5000/',
+    // baseURL: 'http://127.0.0.1:5000/',
+    baseURL: '/',
     timeout: 5000
 });
 
