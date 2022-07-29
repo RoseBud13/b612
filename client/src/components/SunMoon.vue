@@ -157,7 +157,7 @@ export default defineComponent({
 }
 .sunset .bg{
     background-color: #ffeea2;
-    background-image: url(../assets/img/sunset.jpg);
+    background-image: url(../assets/img/sunset.webp);
     background-size: cover;
     background-position: center;
 }
@@ -171,7 +171,7 @@ export default defineComponent({
 }
 .night .bg{
     background-color: #040720;
-    background-image: url(../assets/img/night.jpg);
+    background-image: url(../assets/img/night.webp);
     background-size: cover;
     background-position: center;
 }

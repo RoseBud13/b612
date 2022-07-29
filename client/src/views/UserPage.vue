@@ -395,6 +395,7 @@ export default defineComponent({
         align-items: center;
         justify-content: center;
         padding: 20px 0;
+        height: auto;
     }
 
     .avatar-box {
@@ -403,6 +404,7 @@ export default defineComponent({
 
     .table-area {
         flex: 3;
+        height: auto;
     }
 
     .table-row {
