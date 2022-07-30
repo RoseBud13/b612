@@ -20,7 +20,8 @@
                     {{ post.post_timestamp }}
                 </div>
                 <div class="card-icons">
-                    <i class="fas fa-bookmark"></i>
+                    <p v-if="post.from=='ONE'">ONE·一个</p>
+                    <i v-else-if="post.from=='admin'" class="fas fa-bookmark"></i>
                 </div>
             </div>
         </div>
@@ -96,12 +97,12 @@ export default defineComponent({
     line-height: 1.7rem;
     background-color: #fff;
 }
-.content::v-deep p {
+.content:deep(p) {
     margin-bottom: 1.5rem;
 }
 .content img {
     margin: 2rem 0;
-    width: 100%;
+    width: 60%;
 }
 
 .card-footer {
@@ -121,6 +122,12 @@ export default defineComponent({
     margin: 5px 10px 15px 10px;
     font-size: 0.9rem;
     color: rgb(241, 78, 78);
+}
+
+.card-icons p {
+    margin: 5px 10px 15px 10px;
+    font-size: 0.7rem;
+    color: rgb(222, 159, 159);
 }
 
 .post-card label {
@@ -214,6 +221,10 @@ export default defineComponent({
         padding: 0 10% 10% 10%;
         line-height: 30px;
         background-color: #fff;
+    }
+
+    .content img {
+        width: 100%;
     }
 }
 </style>

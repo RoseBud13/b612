@@ -19,32 +19,71 @@ export default defineComponent({
     },
     data() {
         return {
-            dailyArticleInfo: {},
+            articleInfoList: [],
             posts: []
         }
     },
     methods: {
         fetchArticle() {
             getOneSummary().then(res => {
-                this.dailyArticleInfo = {
-                    'post_id': res.data.data.content_list[1].item_id,
-                    'post_title': res.data.data.content_list[1].title.slice(0, -3),
-                    'post_cover': 'https://b612.one/oneapi/img/' + res.data.data.content_list[1].img_url.slice(27),
-                    'post_timestamp': res.data.data.content_list[1].post_date.slice(0, 10),
-                    'post_img_url': 'https://b612.one/oneapi/img/' + res.data.data.content_list[1].img_url.slice(27)
-                }
-                return this.dailyArticleInfo.post_id
+                res.data.data.content_list.forEach(item => {
+                    if (item['content_type'] == '1') {
+                        if (item['tag_list'].length == 0) {
+                            this.articleInfoList.push({
+                                'post_id': item.item_id,
+                                'post_title': item.title.replace(/\s+/g, '').slice(0, -3),
+                                'post_cover': 'https://b612.one/oneapi/img/' + item.img_url.slice(27),
+                                'post_timestamp': item.post_date.slice(0, 10),
+                                'post_img_url': 'https://b612.one/oneapi/img/' + item.img_url.slice(27),
+                                'post_type': '文章',
+                                'from': 'ONE'
+                            })
+                        } else {
+                            this.articleInfoList.push({
+                                'post_id': item.item_id,
+                                'post_title': item.title,
+                                'post_cover': 'https://b612.one/oneapi/img/' + item.img_url.slice(27),
+                                'post_timestamp': item.post_date.slice(0, 10),
+                                'post_img_url': 'https://b612.one/oneapi/img/' + item.img_url.slice(27),
+                                'post_type': item['tag_list'][0]['title'].replace(/\s+/g, ''),
+                                'from': 'ONE'
+                            })
+                        }
+                    }
+                })
+                return this.articleInfoList
             }).then(data => {
-                getOneArticle(data).then(res => {
-                    // console.log(res.data)
-                    const content_index_start = res.data.data.html_content.indexOf('</div></div></div><p>') + 18
-                    const content_index_end = res.data.data.html_content.indexOf('</p>\n</div>\n') + 4
-                    const content_str = res.data.data.html_content.slice(content_index_start, content_index_end)
-                    // console.log(content_str)
-                    this.dailyArticleInfo['post_content_text'] = content_str
-                    this.posts.splice(2, 0, this.dailyArticleInfo)
-                }).catch(e => {
-                    console.log(e)
+                data.forEach((item, index) => {
+                    index += 2
+                    getOneArticle(item.post_id).then(res => {
+                        if (item.post_type == '文章') {
+                            const content_index_start = res.data.data.html_content.indexOf('</div></div></div><p>') + 18
+                            const content_index_end = res.data.data.html_content.indexOf('</p>\n</div>\n') + 4
+                            const content_str = res.data.data.html_content.slice(content_index_start, content_index_end)
+                            item['post_content_text'] = content_str
+                            this.posts.splice(index, 0, item)
+                        } else if (item.post_type == '电台') {
+                            const content_index_start = res.data.data.html_content.indexOf('</span></p><p>') + 11
+                            const content_index_end = res.data.data.html_content.indexOf('</p><p></p>\n</div>\n') + 4
+                            const content_str = res.data.data.html_content.slice(content_index_start, content_index_end)
+                            item['post_content_text'] = content_str
+                            this.posts.splice(index, 0, item)
+                        } else if (item.post_type == '读诗') {
+                            const content_index_start = res.data.data.html_content.indexOf('<p>&nbsp;</p><p style=\"text-align: center;\">') + 13
+                            const content_index_end = res.data.data.html_content.indexOf('</p><p>&nbsp;</p><p class=') + 4
+                            const content_str = res.data.data.html_content.slice(content_index_start, content_index_end)
+                            item['post_content_text'] = content_str
+                            this.posts.splice(index, 0, item)
+                        } else if (item.post_type == '专栏') {
+                            const content_index_start = res.data.data.html_content.indexOf('&nbsp;</div><p>') + 12
+                            const content_index_end = res.data.data.html_content.indexOf('</p>\n</div>\n') + 4
+                            const content_str = res.data.data.html_content.slice(content_index_start, content_index_end)
+                            item['post_content_text'] = content_str
+                            this.posts.splice(index, 0, item)
+                        }
+                    }).catch(e => {
+                        console.log(e)
+                    })
                 })
             }).catch(e => {
                 console.log(e)
