@@ -56,30 +56,41 @@ export default defineComponent({
                 data.forEach((item, index) => {
                     index += 2
                     getOneArticle(item.post_id).then(res => {
-                        if (item.post_type == '文章') {
-                            const content_index_start = res.data.data.html_content.indexOf('</div></div></div><p>') + 18
-                            const content_index_end = res.data.data.html_content.indexOf('</p>\n</div>\n') + 4
-                            const content_str = res.data.data.html_content.slice(content_index_start, content_index_end)
-                            item['post_content_text'] = content_str
-                            this.posts.splice(index, 0, item)
-                        } else if (item.post_type == '电台') {
-                            const content_index_start = res.data.data.html_content.indexOf('</span></p><p>') + 11
-                            const content_index_end = res.data.data.html_content.indexOf('</p><p></p>\n</div>\n') + 4
-                            const content_str = res.data.data.html_content.slice(content_index_start, content_index_end)
-                            item['post_content_text'] = content_str
-                            this.posts.splice(index, 0, item)
-                        } else if (item.post_type == '读诗') {
-                            const content_index_start = res.data.data.html_content.indexOf('<p>&nbsp;</p><p style=\"text-align: center;\">') + 13
-                            const content_index_end = res.data.data.html_content.indexOf('</p><p>&nbsp;</p><p class=') + 4
-                            const content_str = res.data.data.html_content.slice(content_index_start, content_index_end)
-                            item['post_content_text'] = content_str
-                            this.posts.splice(index, 0, item)
-                        } else if (item.post_type == '专栏') {
-                            const content_index_start = res.data.data.html_content.indexOf('&nbsp;</div><p>') + 12
-                            const content_index_end = res.data.data.html_content.indexOf('</p>\n</div>\n') + 4
-                            const content_str = res.data.data.html_content.slice(content_index_start, content_index_end)
-                            item['post_content_text'] = content_str
-                            this.posts.splice(index, 0, item)
+                        switch(item.post_type) {
+                            case '文章':
+                                const content1_index_start = res.data.data.html_content.indexOf('</div></div></div><p>') + 18
+                                const content1_index_end = res.data.data.html_content.indexOf('</p>\n</div>\n') + 4
+                                const content1_str = res.data.data.html_content.slice(content1_index_start, content1_index_end)
+                                item['post_content_text'] = content1_str
+                                this.posts.splice(index, 0, item)
+                                break
+                            case '电台':
+                                const content2_index_start = res.data.data.html_content.indexOf('</span></p><p>') + 11
+                                const content2_index_end = res.data.data.html_content.indexOf('</p><p></p>\n</div>\n') + 4
+                                const content2_str = res.data.data.html_content.slice(content2_index_start, content2_index_end)
+                                item['post_content_text'] = content2_str
+                                this.posts.splice(index, 0, item)
+                                break
+                            case '读诗':
+                                const content3_index_start = res.data.data.html_content.indexOf('<p>&nbsp;</p><p style=\"text-align: center;\">') + 13
+                                const content3_index_end = res.data.data.html_content.indexOf('</p><p>&nbsp;</p><p class=') + 4
+                                const content3_str = res.data.data.html_content.slice(content3_index_start, content3_index_end)
+                                item['post_content_text'] = content3_str
+                                this.posts.splice(index, 0, item)
+                                break
+                            case '专栏':
+                                const content4_index_start = res.data.data.html_content.indexOf('&nbsp;</div><p>') + 12
+                                const content4_index_end = res.data.data.html_content.indexOf('</p>\n</div>\n') + 4
+                                const content4_str = res.data.data.html_content.slice(content4_index_start, content4_index_end)
+                                item['post_content_text'] = content4_str
+                                this.posts.splice(index, 0, item)
+                                break
+                            case '杂谈':
+                                const content5_index_start = res.data.data.html_content.indexOf('box\">\n    <p>') + 10
+                                const content5_index_end = res.data.data.html_content.indexOf('</p>\n</div>\n') + 4
+                                const content5_str = res.data.data.html_content.slice(content5_index_start, content5_index_end)
+                                item['post_content_text'] = content5_str
+                                this.posts.splice(index, 0, item)
                         }
                     }).catch(e => {
                         console.log(e)
