@@ -105,7 +105,7 @@ export default defineComponent({
                     getOneArticle(item.post_id).then(res => {
                         this.parseArticle(item.post_type, res.data.data, item)
                         this.parseAudio(res.data.data, item)
-                        console.log(item)
+                        // console.log(item)
                         this.posts.splice(index, 0, item)
                     }).catch(e => {
                         console.log(e)

@@ -12,6 +12,9 @@
                 {{ post.post_title }}
             </div>
             <div class="content">
+                <div class="content-info" v-if="post.from=='ONE'">
+                    <p>内容来源: <a href="http://m.wufazhuce.com/about">ONE·一个</a></p>
+                </div>
                 <div class="audio-container" v-if="post.contains_audio">
                     <bubble-player :audioInfo="post.audio_info"></bubble-player>
                 </div>
@@ -107,6 +110,17 @@ export default defineComponent({
 .content:deep(p) {
     margin-bottom: 1.5rem;
 }
+
+.content-info {
+    margin: 10px 0 10px 0;
+    text-align: right;
+}
+
+.content-info p {
+    font-size: 0.8rem;
+    color: rgba(0, 0, 0, 0.5);
+}
+
 .content img {
     margin: 2rem 0;
     width: 60%;
@@ -141,7 +155,7 @@ export default defineComponent({
 
 .card-icons p {
     margin: 5px 10px 15px 10px;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     color: rgb(222, 159, 159);
 }
 

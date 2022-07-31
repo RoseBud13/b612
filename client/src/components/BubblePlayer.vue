@@ -174,14 +174,20 @@ export default defineComponent({
 }
 .disk-cover {
     position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
+    // top: -10px;
+    // left: -10px;
+    // right: -10px;
+    // bottom: -10px;
     background-image: radial-gradient(circle, #444 0%, #333 100%);
     background-size: cover;
     background-position: center;
     background-image: url("https://photo-arch-1306125602.cos.ap-shanghai.myqcloud.com/bgpic1.JPG");
+
+    top: 0;
+    left: 0;
+    height: 99px;
+    width: 99px;
+    border-radius: 50%;
 }
 .disk-cover::after {
     content: "";
