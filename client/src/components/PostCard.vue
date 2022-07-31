@@ -12,6 +12,9 @@
                 {{ post.post_title }}
             </div>
             <div class="content">
+                <div class="audio-container" v-if="post.contains_audio">
+                    <bubble-player :audioInfo="post.audio_info"></bubble-player>
+                </div>
                 <div v-html="post.post_content_text"></div>
                 <img v-if="post.post_img_url.length" :src="post.post_img_url" alt="img">
             </div>
@@ -30,9 +33,13 @@
 
 <script>
 import { defineComponent } from "vue"
+import BubblePlayer from './BubblePlayer.vue'
 
 let PID = 1
 export default defineComponent({
+    components: {
+        BubblePlayer
+    },
     props: {
         post: {
             type: Object,
@@ -103,6 +110,14 @@ export default defineComponent({
 .content img {
     margin: 2rem 0;
     width: 60%;
+}
+
+.audio-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .card-footer {

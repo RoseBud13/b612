@@ -24,6 +24,53 @@ export default defineComponent({
         }
     },
     methods: {
+        parseArticle(type, rawdata, info) {
+            let content_index_start = ''
+            let content_index_end = ''
+            switch(type) {
+                case '阅读':
+                    content_index_start = rawdata.html_content.indexOf('</div></div></div><p>') + 18
+                    content_index_end = rawdata.html_content.indexOf('</p>\n</div>\n') + 4
+                    break
+                case '电台':
+                    content_index_start = rawdata.html_content.indexOf('</span></p><p>') + 11
+                    content_index_end = rawdata.html_content.indexOf('</p><p></p>\n</div>\n') + 4
+                    break
+                case '读诗':
+                    content_index_start = rawdata.html_content.indexOf('<p>&nbsp;</p><p style=\"text-align: center;\">') + 13
+                    content_index_end = rawdata.html_content.indexOf('</p><p>&nbsp;</p><p class=') + 4
+                    break
+                case '专栏':
+                    content_index_start = rawdata.html_content.indexOf('&nbsp;</div><p>') + 12
+                    content_index_end = rawdata.html_content.indexOf('</p>\n</div>\n') + 4
+                    break
+                case '杂谈':
+                    content_index_start = rawdata.html_content.indexOf('box\">\n    <p>') + 10
+                    content_index_end = rawdata.html_content.indexOf('</p>\n</div>\n') + 4
+            }
+            const content_str = rawdata.html_content.slice(content_index_start, content_index_end)
+            info['post_content_text'] = content_str
+        },
+
+        parseAudio(rawdata, info) {
+            const audio_url_index = rawdata.html_content.indexOf('http://music.wufazhuce.com/')
+            if (audio_url_index != -1) {
+                info['contains_audio'] = true
+                const audio_url_end = rawdata.html_content.indexOf('\"><div class=\"one-music-cover\"')
+                const audio_duration_start = rawdata.html_content.indexOf('class=\"one-music-duration\">') +27
+                const audio_duration_end = rawdata.html_content.indexOf('</div><div class=\"one-music-info')
+                const formSeconds = (input) => {
+                    return parseInt(input.split(':')[0]) * 60 + parseInt(input.split(':')[1])
+                }
+                const content1_audio_info = {
+                    'src': 'https://b612.one/oneapi/audio/' + rawdata.html_content.slice(audio_url_index+27, audio_url_end),
+                    'seconds': formSeconds(rawdata.html_content.slice(audio_duration_start, audio_duration_end)),
+                    'title': rawdata.title
+                }
+                info['audio_info'] = content1_audio_info
+            }
+        },
+
         fetchArticle() {
             getOneSummary().then(res => {
                 res.data.data.content_list.forEach(item => {
@@ -35,7 +82,7 @@ export default defineComponent({
                                 'post_cover': 'https://b612.one/oneapi/img/' + item.img_url.slice(27),
                                 'post_timestamp': item.post_date.slice(0, 10),
                                 'post_img_url': 'https://b612.one/oneapi/img/' + item.img_url.slice(27),
-                                'post_type': '文章',
+                                'post_type': '阅读',
                                 'from': 'ONE'
                             })
                         } else {
@@ -56,42 +103,10 @@ export default defineComponent({
                 data.forEach((item, index) => {
                     index += 2
                     getOneArticle(item.post_id).then(res => {
-                        switch(item.post_type) {
-                            case '文章':
-                                const content1_index_start = res.data.data.html_content.indexOf('</div></div></div><p>') + 18
-                                const content1_index_end = res.data.data.html_content.indexOf('</p>\n</div>\n') + 4
-                                const content1_str = res.data.data.html_content.slice(content1_index_start, content1_index_end)
-                                item['post_content_text'] = content1_str
-                                this.posts.splice(index, 0, item)
-                                break
-                            case '电台':
-                                const content2_index_start = res.data.data.html_content.indexOf('</span></p><p>') + 11
-                                const content2_index_end = res.data.data.html_content.indexOf('</p><p></p>\n</div>\n') + 4
-                                const content2_str = res.data.data.html_content.slice(content2_index_start, content2_index_end)
-                                item['post_content_text'] = content2_str
-                                this.posts.splice(index, 0, item)
-                                break
-                            case '读诗':
-                                const content3_index_start = res.data.data.html_content.indexOf('<p>&nbsp;</p><p style=\"text-align: center;\">') + 13
-                                const content3_index_end = res.data.data.html_content.indexOf('</p><p>&nbsp;</p><p class=') + 4
-                                const content3_str = res.data.data.html_content.slice(content3_index_start, content3_index_end)
-                                item['post_content_text'] = content3_str
-                                this.posts.splice(index, 0, item)
-                                break
-                            case '专栏':
-                                const content4_index_start = res.data.data.html_content.indexOf('&nbsp;</div><p>') + 12
-                                const content4_index_end = res.data.data.html_content.indexOf('</p>\n</div>\n') + 4
-                                const content4_str = res.data.data.html_content.slice(content4_index_start, content4_index_end)
-                                item['post_content_text'] = content4_str
-                                this.posts.splice(index, 0, item)
-                                break
-                            case '杂谈':
-                                const content5_index_start = res.data.data.html_content.indexOf('box\">\n    <p>') + 10
-                                const content5_index_end = res.data.data.html_content.indexOf('</p>\n</div>\n') + 4
-                                const content5_str = res.data.data.html_content.slice(content5_index_start, content5_index_end)
-                                item['post_content_text'] = content5_str
-                                this.posts.splice(index, 0, item)
-                        }
+                        this.parseArticle(item.post_type, res.data.data, item)
+                        this.parseAudio(res.data.data, item)
+                        console.log(item)
+                        this.posts.splice(index, 0, item)
                     }).catch(e => {
                         console.log(e)
                     })
