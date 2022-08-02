@@ -187,3 +187,29 @@ class Like(db.DynamicDocument):
                     author_uid = self.author_uid,
                     author = get_disname_by_uid(self.author_uid),
                     timestamp = convert_utc_to_local(self.timestamp))
+
+
+class Task(db.DynamicDocument):
+    task_id = db.StringField(required=True, max_length=64, unique=True)
+    author_uid = db.StringField(required=True, max_length=64, verbose_name="uid")
+    title = db.StringField()
+    created_date = db.DateTimeField(required=True, default=datetime.utcnow)
+    is_done = db.BooleanField(required=True, default=False)
+
+    meta = {
+        'collection': 'task',
+        'ordering': ['-author_uid'],
+        'allow_inheritance': True,
+        'indexes': ['-created_date', 'author_uid']
+    }
+
+    def __init__(self, **kwargs):
+        super(Task, self).__init__(**kwargs)
+    
+    def to_dict(self):
+        return dict(task_id = self.task_id,
+                    author_uid = self.author_uid,
+                    created_by = get_disname_by_uid(self.author_uid),
+                    title = self.title,
+                    created_date = convert_utc_to_local(self.created_date),
+                    is_done = self.is_done)

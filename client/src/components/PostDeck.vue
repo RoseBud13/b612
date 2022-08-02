@@ -29,7 +29,7 @@ export default defineComponent({
             let content_index_end = ''
             switch(type) {
                 case '阅读':
-                    content_index_start = rawdata.html_content.indexOf('</div></div></div><p>') + 18
+                    content_index_start = rawdata.html_content.indexOf('<div class=\"one-title-box\">')
                     content_index_end = rawdata.html_content.indexOf('</p>\n</div>\n') + 4
                     break
                 case '电台':
@@ -41,15 +41,20 @@ export default defineComponent({
                     content_index_end = rawdata.html_content.indexOf('</p><p>&nbsp;</p><p class=') + 4
                     break
                 case '专栏':
-                    content_index_start = rawdata.html_content.indexOf('&nbsp;</div><p>') + 12
+                    content_index_start = rawdata.html_content.indexOf('<div class=\"one-title-box\">')
                     content_index_end = rawdata.html_content.indexOf('</p>\n</div>\n') + 4
                     break
                 case '杂谈':
                     content_index_start = rawdata.html_content.indexOf('box\">\n    <p>') + 10
                     content_index_end = rawdata.html_content.indexOf('</p>\n</div>\n') + 4
             }
-            const content_str = rawdata.html_content.slice(content_index_start, content_index_end)
-            info['post_content_text'] = content_str
+            let content_str = rawdata.html_content.slice(content_index_start, content_index_end)
+            if (content_str.indexOf('<img data-author=') !== -1) {
+                let replaced_content_str = content_str.replace('data-author=\"\"', 'style=\"width: 100%;\"').replace('data-original-', '').replace('src=\"http://image.wufazhuce.com/', 'src=\"https://b612.one/oneapi/img/')
+                info['post_content_text'] = replaced_content_str
+            } else {
+                info['post_content_text'] = content_str
+            }
         },
 
         parseAudio(rawdata, info) {
@@ -78,7 +83,7 @@ export default defineComponent({
                         if (item['tag_list'].length == 0) {
                             this.articleInfoList.push({
                                 'post_id': item.item_id,
-                                'post_title': item.title.replace(/\s+/g, '').slice(0, -3),
+                                'post_title': item.title,
                                 'post_cover': 'https://b612.one/oneapi/img/' + item.img_url.slice(27),
                                 'post_timestamp': item.post_date.slice(0, 10),
                                 'post_img_url': 'https://b612.one/oneapi/img/' + item.img_url.slice(27),
