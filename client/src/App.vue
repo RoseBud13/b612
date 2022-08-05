@@ -8,6 +8,7 @@
 import { defineComponent, watch, getCurrentInstance, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import router from './router';
+import { storage } from './utils/storage'
 
 export default defineComponent({
 	setup() {
@@ -29,7 +30,19 @@ export default defineComponent({
 		watch(
 			() => [store.state.userInfo.name, store.state.userInfo.username],
 			(data) => {
-				if (data[0] && data[0].startsWith('unset_')) {
+				if (data[0] && data[0].startsWith('bday_')) {
+					let localSetting = storage.getLocalSettingInfo();
+					if (localSetting) {
+						if (!localSetting.includes('bday_checked')) {
+							localSetting.push('bday_checked');
+							storage.setLocalSettingInfo(localSetting);
+							window.location.href = "https://rosebud13.github.io/birthday/?name=%E5%AD%99%E5%A9%89%E5%AE%81&msg=%E6%88%91%E7%88%B1%E7%9A%84%E5%A5%B3%E5%AD%A9%EF%BC%8C%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90%E5%91%80";
+						}
+					} else {
+						storage.setLocalSettingInfo(['bday_checked']);
+						window.location.href = "https://rosebud13.github.io/birthday/?name=%E5%AD%99%E5%A9%89%E5%AE%81&msg=%E6%88%91%E7%88%B1%E7%9A%84%E5%A5%B3%E5%AD%A9%EF%BC%8C%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90%E5%91%80";
+					}
+				} else if (data[0] && data[0].startsWith('unset_')) {
 					// console.log(data[0]);
 					router.push({name: 'user', params: { username: data[1] }});
 					proxy.$toast('请完善昵称和邮箱', 'warning', 5000);

@@ -33,7 +33,7 @@ export default defineComponent({
                     content_index_end = rawdata.html_content.indexOf('</p>\n</div>\n') + 4
                     break
                 case '电台':
-                    content_index_start = rawdata.html_content.indexOf('</span></p><p>') + 11
+                    content_index_start = rawdata.html_content.indexOf('<div class=\"one-title-box\">')
                     content_index_end = rawdata.html_content.indexOf('</p><p></p>\n</div>\n') + 4
                     break
                 case '读诗':

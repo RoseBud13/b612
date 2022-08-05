@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash
 import jwt
 from functools import wraps
+import json
 
 from .models import User, Post, Comment, Like, BoardingPass
 from .utils import Tools
@@ -20,6 +21,24 @@ api = Blueprint('api', __name__)
 
 
 # -------------------------------------- Registration ---------------------------------
+def check_boarding_pass_bday(bp_passcode):
+    boarding_pass = BoardingPass.objects(passcode=bp_passcode).first()
+    if not boarding_pass:
+        return False, 'Boarding pass code not found'
+    
+    # bp_info = boarding_pass.to_dict()
+    if boarding_pass.expired == False:
+        # if bp_info['pending_code'].startswith('not'):
+        if boarding_pass.pending_code.startswith('not'):
+            pencode = 'pending_bday_' + Tools.gen_random_code(16)
+            boarding_pass.update(pending_code=pencode)
+            return True, pencode
+        else:
+            # return True, bp_info['pending_code']
+            return True, boarding_pass.pending_code
+    else:
+        return False, 'Boarding pass already used'
+
 
 def check_boarding_pass(bp_passcode):
     boarding_pass = BoardingPass.objects(passcode=bp_passcode).first()
@@ -72,7 +91,12 @@ def verify_bp_code():
 
     bp_code = data['passcode']
     print(bp_code)
-    status, pending_code = check_boarding_pass(bp_code)
+    bday_bpcode_list = json.load(open('./config/bday_bpcode.json'))
+
+    if bp_code in bday_bpcode_list['bpcode_list'] :
+        status, pending_code = check_boarding_pass_bday(bp_code)
+    else:
+        status, pending_code = check_boarding_pass(bp_code)
     if status == True:
         return jsonify({'status': status, 'pending_code': pending_code})
     else:
@@ -87,11 +111,14 @@ def register_user():
     print(pencode)
 
     if check_bp_pencode(pencode):
-
-        new_email = data['email'] if data['email'] else 'unset_' + Tools.gen_random_code(6) + '@test.com'
+        if pencode.startswith('pending_bday_'): 
+            new_email = data['email'] if data['email'] else 'bday_' + Tools.gen_random_code(6) + '@test.com'
+            new_name = data['name'] if data['name'] else 'bday_' + Tools.gen_random_code(6)
+        else:
+            new_email = data['email'] if data['email'] else 'unset_' + Tools.gen_random_code(6) + '@test.com'
+            new_name = data['name'] if data['name'] else 'unset_' + Tools.gen_random_code(6)
         new_username = data['username']
         new_password = data['password']
-        new_name = data['name'] if data['name'] else 'unset_' + Tools.gen_random_code(6)
 
 
         if not new_email or not new_username or not new_password or not new_name:

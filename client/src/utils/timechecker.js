@@ -17,3 +17,11 @@ export const tomorrow = new Date(
   0,
   0
 )
+
+export const isToday = (date) => {
+  const today = new Date();
+  if (today.toDateString() === date.toDateString()) {
+    return true;
+  }
+  return false;
+}

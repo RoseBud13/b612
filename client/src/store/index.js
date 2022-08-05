@@ -158,7 +158,14 @@ export default createStore({
             }
         },
         login(state, data) {
-            const localSetting = ['loggedIn'];
+            let localSetting = storage.getLocalSettingInfo();
+            if (localSetting) {
+                if (!localSetting.includes('loggedIn')) {
+                    localSetting.push('loggedIn');
+                }
+            } else {
+                localSetting = ['loggedIn'];
+            }
             state.localSettingInfo = localSetting;
             storage.setLocalSettingInfo(localSetting);
             state.authToken = data.token;
