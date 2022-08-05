@@ -37,8 +37,8 @@ export default defineComponent({
                     content_index_end = rawdata.html_content.indexOf('</p><p></p>\n</div>\n') + 4
                     break
                 case '读诗':
-                    content_index_start = rawdata.html_content.indexOf('<p>&nbsp;</p><p style=\"text-align: center;\">') + 13
-                    content_index_end = rawdata.html_content.indexOf('</p><p>&nbsp;</p><p class=') + 4
+                    content_index_start = rawdata.html_content.indexOf('<div class=\"one-title-box\">')
+                    content_index_end = rawdata.html_content.indexOf('<div class=\"one-editor-box\">')
                     break
                 case '专栏':
                     content_index_start = rawdata.html_content.indexOf('<div class=\"one-title-box\">')
