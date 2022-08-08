@@ -34,11 +34,11 @@ export default defineComponent({
                     break
                 case '电台':
                     content_index_start = rawdata.html_content.indexOf('<div class=\"one-title-box\">')
-                    content_index_end = rawdata.html_content.indexOf('</p><p></p>\n</div>\n') + 4
+                    content_index_end = rawdata.html_content.indexOf('</p>\n</div>\n') + 4
                     break
                 case '读诗':
                     content_index_start = rawdata.html_content.indexOf('<div class=\"one-title-box\">')
-                    content_index_end = rawdata.html_content.indexOf('<div class=\"one-editor-box\">')
+                    content_index_end = rawdata.html_content.indexOf('</p>\n</div>\n') + 4
                     break
                 case '专栏':
                     content_index_start = rawdata.html_content.indexOf('<div class=\"one-title-box\">')
