@@ -1,10 +1,10 @@
 <template>
-    <div class="nav-bar">
-        <div class="nav-bar-container" :class="(dashboard? 'dashboard-shown' : '')">
-            <div class="nav-bar-left">
+    <div class="home-navbar">
+        <div class="navbar-container" :class="(dashboard? 'dashboard-shown' : '')">
+            <div class="navbar-left">
                 <port @goTo="toUniverse"></port>
             </div>
-            <div class="nav-bar-mid">
+            <div class="navbar-mid">
                 <div v-if="$route.name == 'home'" class="clock-box" @click="toggleDashboard(this.dashboard)" style="cursor: pointer;">
                     <clock :blink="true" :displaySeconds="false" :twelveHour="false"></clock>
                 </div>
@@ -12,7 +12,7 @@
                     <clock :blink="true" :displaySeconds="false" :twelveHour="false"></clock>
                 </div>
             </div>
-            <div class="nav-bar-right" :class="[theme]">
+            <div class="navbar-right" :class="[theme]">
                 <div v-if="$route.name == 'home'" class="menu-item">
                     <div class="menu-btn">
                         <i class="fas fa-cog"></i>
@@ -73,7 +73,7 @@
 import { defineComponent } from 'vue'
 import { mapMutations } from 'vuex';
 import Port from './Port.vue';
-import Clock from './Clock.vue';
+import Clock from './widget/Clock.vue';
 
 export default defineComponent({
     components: {
@@ -138,14 +138,14 @@ export default defineComponent({
 ul {
   list-style: none;
 }
-.nav-bar {
+.home-navbar {
     position: absolute;
     top: 0;
     z-index: 100;
     width: 100vw;
     height: 50px;
 }
-.nav-bar-container {
+.navbar-container {
     width: 100%;
     height: 100%;
     font-size: 17px;
@@ -157,15 +157,15 @@ ul {
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
 }
-.nav-bar-left {
+.navbar-left {
     flex: 1;
     align-self: center;
 }
-.nav-bar-mid {
+.navbar-mid {
     flex: 2;
     align-self: center;
 }
-.nav-bar-right {
+.navbar-right {
     flex: 1;
     align-self: center;
     display: flex;

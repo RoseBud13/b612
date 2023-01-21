@@ -1,5 +1,5 @@
 <template>
-    <div class="sea" :class="[{ dashboardMode: isDashboard }, theme]">
+    <div class="home-foreground" :class="[{ dashboardMode: isDashboard }, theme]">
         <dashboard></dashboard>
     </div>
 </template>
@@ -7,7 +7,7 @@
 <script>
 import { defineComponent } from 'vue'
 import { mapMutations } from 'vuex';
-import Dashboard from "../components/Dashboard.vue"
+import Dashboard from "./Dashboard.vue"
 
 export default defineComponent({
     components: {
@@ -72,7 +72,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.sea{
+.home-foreground{
     position: absolute;
     bottom: 0;
     width: 100vw;

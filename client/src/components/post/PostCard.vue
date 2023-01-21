@@ -36,7 +36,7 @@
 
 <script>
 import { defineComponent } from "vue"
-import BubblePlayer from './BubblePlayer.vue'
+import BubblePlayer from '../BubblePlayer.vue'
 
 let PID = 1
 export default defineComponent({

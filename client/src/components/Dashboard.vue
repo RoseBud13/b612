@@ -87,11 +87,11 @@
 <script>
 import { defineComponent } from 'vue'
 import { getOneSummary } from "../api"
-import LittleFox from "../components/LittleFox.vue"
-import MiniSlider from "../components/MiniSlider.vue"
-import PostDeck from './PostDeck.vue'
-import ShelfDeck from './ShelfDeck.vue'
-import TodoDeck from './TodoDeck.vue'
+import LittleFox from "./widget/LittleFox.vue"
+import MiniSlider from "./widget/MiniSlider.vue"
+import PostDeck from './post/PostDeck.vue'
+import ShelfDeck from './shelf/ShelfDeck.vue'
+import TodoDeck from './todo/TodoDeck.vue'
 import AppBox from './AppBox.vue'
 
 export default defineComponent({

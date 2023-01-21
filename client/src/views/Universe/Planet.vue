@@ -2,7 +2,7 @@
   <div class="planet">
     <div class="planet-container">
       <div class="planet-horizon">
-        <img src="../assets/img/prince.png" alt="">
+        <img src="../../assets/img/prince.png" alt="">
       </div>
       <continent
           :continent="continent"

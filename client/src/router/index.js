@@ -5,7 +5,7 @@ const history = createWebHistory();
 
 const routes = [
   { path: '/', name: 'home', meta: {title: 'B612 | Home', showPortOnMobile: true}, component: () => import('../views/Home.vue') },
-  { path: '/universe', name: 'universe',  meta: {title: 'B612 | Universe', showPortOnMobile: false}, component: () => import('../views/Universe.vue') },
+  { path: '/universe', name: 'universe',  meta: {title: 'B612 | Universe', showPortOnMobile: false}, component: () => import('../views/Universe/Universe.vue') },
   { 
     path: '/user/:username', 
     name: 'user',

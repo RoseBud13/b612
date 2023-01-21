@@ -4,10 +4,10 @@
             <div class="wrap">
                 <ul class="slider">
                     <li>
-                        <img src="../assets/img/flora1.jpg" alt="flower1">
+                        <img src="../../assets/img/flora1.jpg" alt="flower1">
                     </li>
                     <li>
-                        <img src="../assets/img/flora2.jpg" alt="flower1">
+                        <img src="../../assets/img/flora2.jpg" alt="flower1">
                     </li>
                 </ul>
             </div>

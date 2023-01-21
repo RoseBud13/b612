@@ -1,8 +1,8 @@
 <template>
     <div>
         <space></space>
-        <nav-bar></nav-bar>
-        <div class="login-card">
+        <home-navbar></home-navbar>
+        <div class="user-card">
             <div class="info-area">
                 <div class="avatar-box">
                     <img class="avatar" :src="state.userAvatarUrl"/>
@@ -59,12 +59,12 @@ import { useStore } from 'vuex';
 import { getUser, updateUser } from "../api";
 import { mapMutations } from '../utils/map-state';
 import Space from '../components/Space.vue'
-import NavBar from "../components/NavBar.vue"
+import HomeNavbar from "../components/HomeNavbar.vue"
 
 export default defineComponent({
     components: {
         Space,
-        NavBar
+        HomeNavbar
     },
     setup() {
         const store = useStore();
@@ -236,7 +236,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.login-card {
+.user-card {
     position: fixed;
     top: 50%;
     left: 50%;

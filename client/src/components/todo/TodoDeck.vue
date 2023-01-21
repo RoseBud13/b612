@@ -42,7 +42,7 @@
 import { defineComponent } from 'vue'
 import { mapMutations, mapState } from 'vuex'
 import Task from './Task.vue'
-import { today, tomorrow } from '../utils/timechecker'
+import { today, tomorrow } from '../../utils/timechecker'
 
 export default defineComponent({
     components: {

@@ -1,6 +1,6 @@
 <template>
-    <div class="sun-moon" @dblclick="toggleSearchArea">
-        <div id="sun-moon-container" :class="[theme]">
+    <div class="home-background" @dblclick="toggleSearchArea">
+        <div class="background-container" :class="[theme]">
             <div class="bg"></div>
             <div class="moon-box">
                 <div class="moon"></div>
@@ -45,11 +45,11 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
-.sun-moon {
+<style lang="scss" scoped>
+.home-background {
     z-index: -1;
 }
-#sun-moon-container {
+.background-container {
     height: 100vh;
 }
 .search-area {

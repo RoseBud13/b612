@@ -10,7 +10,7 @@
 <script>
 import { defineComponent } from 'vue'
 import { mapState, mapMutations } from 'vuex'
-import AppBar from './AppBar.vue'
+import AppBar from '../../components/AppBar.vue'
 import Continent from './Continent.vue'
 
 export default defineComponent({

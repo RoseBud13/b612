@@ -32,7 +32,7 @@
                 </div>
                 <div class="login-box" :class="state.loginBoxClass">
                     <div class="little-prince">
-                        <img src="../assets/img/prince.png" alt="little-prince">
+                        <img src="../../assets/img/prince.png" alt="little-prince">
                     </div>
                     <div class="center">
                         <h2 class="login-title" @click="showLoginCard()">
@@ -53,9 +53,9 @@
 <script>
 import { defineComponent, reactive, watch, getCurrentInstance, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import { verifyBpCode, userRegister, userLogin } from "../api";
-import { mapMutations } from '../utils/map-state';
-import SpaceEmbed from './SpaceEmbed.vue';
+import { verifyBpCode, userRegister, userLogin } from "../../api";
+import { mapMutations } from '../../utils/map-state';
+import SpaceEmbed from '../SpaceEmbed.vue';
 
 export default defineComponent({
     components: {

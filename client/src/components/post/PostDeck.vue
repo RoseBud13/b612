@@ -10,7 +10,7 @@
 
 <script>
 import { defineComponent } from "vue"
-import { getOneSummary, getOneArticle, getPostContent } from "../api"
+import { getOneSummary, getOneArticle, getPostContent } from "../../api"
 import PostCard from './PostCard.vue'
 
 export default defineComponent({

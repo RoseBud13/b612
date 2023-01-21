@@ -4,28 +4,28 @@
             <div class="shelf-items">
                 <div class="shelf-upper">
                     <div class="book-item">
-                        <img src="../assets/img/book_cover.jpeg" alt="book">
+                        <img src="../../assets/img/book_cover.jpeg" alt="book">
                     </div>
                     <div class="book-item">
-                        <img src="../assets/img/book_cover.jpeg" alt="book">
+                        <img src="../../assets/img/book_cover.jpeg" alt="book">
                     </div>
                     <div class="book-item">
-                        <img src="../assets/img/book_cover.jpeg" alt="book">
+                        <img src="../../assets/img/book_cover.jpeg" alt="book">
                     </div>
                     <div class="book-item">
-                        <img src="../assets/img/book_cover.jpeg" alt="book">
+                        <img src="../../assets/img/book_cover.jpeg" alt="book">
                     </div>
                     <div class="book-item">
-                        <img src="../assets/img/book_cover.jpeg" alt="book">
+                        <img src="../../assets/img/book_cover.jpeg" alt="book">
                     </div>
                     <div class="book-item">
-                        <img src="../assets/img/book_cover.jpeg" alt="book">
+                        <img src="../../assets/img/book_cover.jpeg" alt="book">
                     </div>
                     <div class="book-item">
-                        <img src="../assets/img/book_cover.jpeg" alt="book">
+                        <img src="../../assets/img/book_cover.jpeg" alt="book">
                     </div>
                     <div class="book-item">
-                        <img src="../assets/img/book_cover.jpeg" alt="book">
+                        <img src="../../assets/img/book_cover.jpeg" alt="book">
                     </div>
                 </div>
                 <div class="shelf-lower">
@@ -57,7 +57,7 @@
             </div>
             <div class="shelf-item-detail">
                 <div class="item-wrapper">
-                    <img src="../assets/img/book_cover.jpeg" alt="book">
+                    <img src="../../assets/img/book_cover.jpeg" alt="book">
                     <div class="item-title">
                         <p>The Fault in Our Stars</p>
                     </div>
